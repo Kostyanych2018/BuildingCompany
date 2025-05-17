@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:projectViewModels="using:BuildingCompany.UI.ViewModels.ProjectViewModels"
+             xmlns:dto="clr-namespace:BuildingCompany.Application.DTOs;assembly=BuildingCompany.Application"
+             x:Class="BuildingCompany.UI.Pages.ProjectPages.ProjectsPage"
+             x:DataType="projectViewModels:ProjectsViewModel">
+    <ContentPage.MenuBarItems>
+        <MenuBarItem Text="Создать">
+            <MenuFlyoutItem Text="Проект" Command="{Binding GoToCreateProjectCommand}" />
+        </MenuBarItem>
+        <MenuBarItem Text="Удалить">
+            <MenuFlyoutItem Text="Проект" Command="{Binding DeleteProjectCommand}"
+                            IsEnabled="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}" />
+        </MenuBarItem>
+    </ContentPage.MenuBarItems>
+    <ContentPage.Content>
+        <ScrollView TranslationY="-20">
+            <VerticalStackLayout Spacing="10" Padding="10">
+                <Label Text="Проекты" Style="{StaticResource TitleLabel}"/>
+                <Label Text="{Binding Message}"
+                       TextColor="ForestGreen" HorizontalOptions="Center"
+                       IsVisible="{Binding Message,
+                       Converter={StaticResource IsStringNotNullOrEmptyConverter}}" />
+                <BoxView HeightRequest="2" Color="Black" />
+                <BoxView HeightRequest="2" Color="Black" />
+                <Picker Title="Выберите проект:"
+                        ItemsSource="{Binding Projects}"
+                        SelectedItem="{Binding SelectedProject}"
+                        ItemDisplayBinding="{Binding Name}"
+                        SelectedIndexChanged="LoadProjectTasksHandler" />
+                <Border Style="{StaticResource MyBorder}"
+                        IsVisible="{Binding SelectedProject,
+                    Converter={StaticResource IsNotNullConverter}}">
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Информация о проекте" Style="{StaticResource SubTitleLabel}"
+                               FontSize="14" />
+                        <Label Text="{Binding SelectedProject.Name,StringFormat='Название: {0}'}" />
+                        <Label Text="{Binding SelectedProject.Description,StringFormat='Описание: {0}'}" />
+                        <Label Text="{Binding SelectedProject.Budget,StringFormat='Бюджет: {0} BYN'}" />
+                        <Label Text="{Binding SelectedProject.Status,StringFormat='Статус: {0}'}"
+                               TextColor="{Binding SelectedProject.Status,Converter={StaticResource ProjectStatusToColorConverter}}"
+                               HorizontalTextAlignment="End" />
+
+                    </VerticalStackLayout>
+                </Border>
+                <Label Text="Задачи проекта" Style="{StaticResource SubTitleLabel}"/>
+                <CollectionView ItemsSource="{Binding Tasks}"
+                                EmptyView="Нет задач для данного проекта"
+                                IsVisible="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="dto:ProjectTaskDto ">
+                            <Border Style="{StaticResource MyBorder}">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding 
+                                        Source={RelativeSource 
+                                        AncestorType={x:Type projectViewModels:ProjectsViewModel}}, Path=GoToTaskDetailsCommand}"
+                                        CommandParameter="{Binding}"/>
+                                </Border.GestureRecognizers>
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="{Binding Name}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

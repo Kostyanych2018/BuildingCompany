@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:BuildingCompany.UI"
+             xmlns:convert="clr-namespace:CommunityToolkit.Maui.Converters;assembly=CommunityToolkit.Maui"
+             xmlns:custom="clr-namespace:BuildingCompany.UI.Converters"
+             x:Class="BuildingCompany.UI.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <convert:IsStringNullOrEmptyConverter x:Key="IsStringNullOrEmptyConverter"></convert:IsStringNullOrEmptyConverter>>
+            <convert:IsNotNullConverter x:Key="IsNotNullConverter"></convert:IsNotNullConverter>
+            <convert:IsStringNotNullOrEmptyConverter x:Key="IsStringNotNullOrEmptyConverter"></convert:IsStringNotNullOrEmptyConverter>
+            <convert:IsNullConverter x:Key="IsNullConverter"></convert:IsNullConverter>
+            <custom:ProjectStatusToColorConverter x:Key="ProjectStatusToColorConverter"></custom:ProjectStatusToColorConverter>
+            <custom:TaskStatusToColorConverter x:Key="TaskStatusToColorConverter"></custom:TaskStatusToColorConverter>
+            <custom:IntToProgressConverter x:Key="IntToProgressConverter"></custom:IntToProgressConverter>
+            <Style x:Key="TitleLabel" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+            <Style x:Key="SubTitleLabel" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+            <Style x:Key="MyBorder" TargetType="Border">
+                <Setter Property="StrokeShape" Value="RoundRectangle 5"/>
+                <Setter Property="Stroke" Value="{SolidColorBrush Black}"/>
+                <Setter Property="Padding" Value="10"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

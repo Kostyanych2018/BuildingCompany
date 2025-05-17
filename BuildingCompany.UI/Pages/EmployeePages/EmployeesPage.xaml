@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.EmployeeViewModels"
+             xmlns:oxy="clr-namespace:OxyPlot.Maui.Skia;assembly=OxyPlot.Maui.Skia"
+             x:Class="BuildingCompany.UI.Pages.EmployeePages.EmployeesPage"
+             Shell.NavBarIsVisible="False"
+             x:DataType="vm:EmployeesViewModel">
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout Spacing="10">
+
+                <Label Text="Сотрудники" Style="{StaticResource TitleLabel}" />
+
+                <oxy:PlotView Model="{Binding StatusPlot}"
+                              HeightRequest="250"
+                              WidthRequest="300" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

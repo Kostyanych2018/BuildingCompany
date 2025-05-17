@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Shell
+    x:Class="BuildingCompany.UI.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:BuildingCompany.UI"
+    xmlns:pages="clr-namespace:BuildingCompany.UI.Pages"
+    xmlns:employeePages="clr-namespace:BuildingCompany.UI.Pages.EmployeePages"
+    xmlns:projectPages="using:BuildingCompany.UI.Pages.ProjectPages"
+    Shell.FlyoutBehavior="Flyout">
+
+
+    <FlyoutItem Title="Проекты">
+        <ShellContent
+            ContentTemplate="{DataTemplate projectPages:ProjectsPage}"
+            Route="ProjectsPage" />
+    </FlyoutItem>
+    <FlyoutItem Title="Сотрудники">
+        <ShellContent
+            ContentTemplate="{DataTemplate employeePages:EmployeesPage}"
+            Route="EmployeesPage" />
+    </FlyoutItem>
+</Shell>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.ProjectTaskViewModels"
+             Shell.NavBarIsVisible="False"
+             x:Class="BuildingCompany.UI.Pages.ProjectTaskPages.ProjectTaskDetailsPage"
+             x:DataType="vm:ProjectTaskDetailsViewModel">
+    <ContentPage.Content>
+        <VerticalStackLayout Spacing="10" Padding="10">
+            <Label Text="Детали задачи" Style="{StaticResource TitleLabel}" />
+            <Border Style="{StaticResource MyBorder}">
+                <VerticalStackLayout Spacing="10">
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Проект: " FontAttributes="Bold" />
+                                <Span Text="{Binding SelectedTask.Name}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label IsVisible="{Binding SelectedTask.Description,
+                     Converter={StaticResource IsStringNotNullOrEmptyConverter}}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Описание: " FontAttributes="Bold" />
+                                <Span Text="{Binding SelectedTask.Description}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Статус: " FontAttributes="Bold" />
+                                <Span Text="{Binding SelectedTask.Status}"
+                                      TextColor="{Binding SelectedTask.Status,
+                                      Converter={StaticResource TaskStatusToColorConverter}}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Text="Прогресс выполнения: " FontAttributes="Bold" />
+                    <ProgressBar Width="3"
+                                 Progress="{Binding SelectedTask.CompletionPercentage,
+                                 Converter={StaticResource IntToProgressConverter}}"
+                                 ProgressColor="MediumPurple" />
+                    <Label Text="{Binding SelectedTask.CompletionPercentage,StringFormat=
+                '{0}%'}" HorizontalOptions="Center" />
+                    <BoxView HeightRequest="2" Color="Black" Margin="0,5,0,5"/>
+                    
+                    <Label IsVisible="{Binding SelectedTask.AssignedEmployeeId,
+                           Converter={StaticResource IsNotNullConverter}}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Ответственный сотрудник: " FontAttributes="Bold" />
+                                <Span Text="{Binding AssignedEmployee.FullName}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Text="Сотрудник не назначен" HorizontalOptions="Center" TextColor="Gray"
+                           IsVisible="{Binding SelectedTask.AssignedEmployeeId,
+                           Converter={StaticResource IsNullConverter}}"/>
+                    <VerticalStackLayout Spacing="5">
+                        <Picker Title="Выберите сотрудника:"
+                                ItemsSource="{Binding Employees}"
+                                SelectedItem="{Binding SelectedEmployee}"
+                                ItemDisplayBinding="{Binding FullName}"/>
+                        <Button Text="Назначить"
+                                Command="{Binding AssignEmployeeCommand}"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>
