@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace BuildingCompany.Domain.Entities;
 
 public class Project : Entity, IEquatable<Project>

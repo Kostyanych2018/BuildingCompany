@@ -1,4 +1,5 @@
 using BuildingCompany.Serialization;
+using Xunit;
 
 namespace BuildingCompany.Domain.Tests;
 

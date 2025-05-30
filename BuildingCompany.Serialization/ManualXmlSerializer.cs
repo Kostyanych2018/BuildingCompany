@@ -2,9 +2,8 @@ using System.Collections;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
-using BuildingCompany.Serialization;
 
-namespace BuildingCompany.Domain.Tests;
+namespace BuildingCompany.Serialization;
 
 public class ManualXmlSerializer : ISerializer
 {

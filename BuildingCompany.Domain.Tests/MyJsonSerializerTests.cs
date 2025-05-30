@@ -1,5 +1,6 @@
 using BuildingCompany.Domain.Entities;
 using BuildingCompany.Serialization;
+using Xunit;
 
 namespace BuildingCompany.Domain.Tests;
 
@@ -11,10 +12,9 @@ public class MyJsonSerializerTests
     public void SerializeAndDeserialize_Project_ShouldReturnEqualObject()
     {
         var initProject = new Project("Тестовый проект JSON", "Описание для JSON теста", 123m);
-        initProject.Id = 1;
         initProject.SetStatus(ProjectStatus.InProgress);
-        initProject.Tasks.Add(new ProjectTask("Задача 1 JSON", "Описание Задачи 1", initProject.Id) { Id = 101 });
-        initProject.Tasks.Add(new ProjectTask("Задача 2 JSON", "Описание Задачи 2", initProject.Id,50) { Id = 101 });
+        initProject.Tasks.Add(new ProjectTask("Задача 1 JSON", "Описание Задачи 1", initProject.Id));
+        initProject.Tasks.Add(new ProjectTask("Задача 2 JSON", "Описание Задачи 2", initProject.Id,50));
         string jsonData = _serializer.Serialize(initProject);
         Project? project = _serializer.Deserialize<Project>(jsonData);
         

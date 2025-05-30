@@ -1,47 +1,48 @@
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using BuildingCompany.Application.DTOs;
 using BuildingCompany.Application.Interfaces;
+using BuildingCompany.Domain.Abstractions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MongoDB.Bson;
 
 namespace BuildingCompany.UI.ViewModels.ProjectViewModels;
 
 public partial class CreateProjectViewModel(IProjectService projectService) : ObservableObject
 {
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(CreateProjectCommand))]
+    private string _projectName = "";
 
-    [ObservableProperty] private string _projectName = "";
-    [ObservableProperty] private string? _projectDescription;
-    [ObservableProperty] private string _projectBudget;
-    [ObservableProperty] private string _message = "";
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(CreateProjectCommand))]
+    private string? _projectDescription;
 
-    [RelayCommand]
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(CreateProjectCommand))]
+    private string _projectBudget="";
+    
+
+    [RelayCommand(CanExecute = nameof(CanCreateProject))]
     private async Task CreateProject()
     {
-        if (string.IsNullOrWhiteSpace(ProjectName)) {
-            Message = "Название проекта не может быть пустым.";
-            return;
-        }
-        if (!decimal.TryParse(ProjectBudget,out var budget) || budget < 0) {
-            Message = "Бюджет не может быть отрицательным или введен неверно.";
-            return;
-        }
-
+        decimal.TryParse(ProjectBudget, out var budget);
         var dto = new ProjectDto()
         {
             Name = ProjectName,
             Budget = budget,
             Description = ProjectDescription
         };
-        try {
-            var createdProject = await projectService.CreateProject(dto);
-            Message = $"Проект '{createdProject.Name}' успешно создан.";
-            ProjectName = "";
-            ProjectDescription = null;
-            ProjectBudget = "";
-        }
-        catch (Exception ex) {
-            Message = $"Произошла ошибка: {ex.Message}";
-        }
+        var createdProject = await projectService.CreateProject(dto);
+        await Shell.Current.DisplayAlert("Успех", $"Проект '{createdProject.Name}' успешно создан.", "OK");
+        ProjectDescription = null;
+        ProjectName = "";
+        ProjectBudget = "";
+    }
+
+    private bool CanCreateProject()
+    {
+        return !string.IsNullOrWhiteSpace(ProjectName)
+               && decimal.TryParse(ProjectBudget, out var budget)
+               && budget > 0;
     }
 }

@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
-using BuildingCompany.Application.DTOs;
 using BuildingCompany.Application.Interfaces;
+using BuildingCompany.UI.Pages.ProjectPages;
 using BuildingCompany.UI.Pages.ProjectTaskPages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.Controls;
+using MongoDB.Bson;
 
 namespace BuildingCompany.UI.ViewModels.ProjectViewModels;
-
+/// <summary>
+/// Модель для управления прокектами
+/// Просмотр, удаление, переход на создание
+/// </summary>
 [SuppressMessage("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator", "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT")]
 public partial class ProjectsViewModel : ObservableObject
 {
@@ -32,7 +31,7 @@ public partial class ProjectsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task GoToCreateProject() => await Shell.Current.GoToAsync("CreateProjectPage");
+    private async Task GoToCreateProject() => await Shell.Current.GoToAsync(nameof(CreateProjectPage));
 
     [RelayCommand]
     private async Task GoToTaskDetails(ProjectTaskDto taskDto)
@@ -44,11 +43,20 @@ public partial class ProjectsViewModel : ObservableObject
         await Shell.Current.GoToAsync(nameof(ProjectTaskDetailsPage), dict);
     }
 
+    [RelayCommand]
+    private async Task UpdateProject()
+    {
+        IDictionary<string, object> parameters = new Dictionary<string, object>()
+        {
+            { "projectId", SelectedProject.Id }
+        };
+        await Shell.Current.GoToAsync(nameof(UpdateProjectPage), parameters);
+    }
+
 
     [RelayCommand]
     private async Task LoadProjects()
     {
-        Message = "";
         var projectDtos = (await _projectService.GetProjects()).ToList();
         Projects.Clear();
         foreach (var dto in projectDtos) {
@@ -56,12 +64,12 @@ public partial class ProjectsViewModel : ObservableObject
         }
 
         if (projectDtos.Count == 0) {
-            Message = "Проектов пока нет.";
+            Message = "Проектов пока нет";
         }
     }
 
     [RelayCommand]
-    private async Task LoadProjectTasks(int projectId)
+    private async Task LoadProjectTasks(ObjectId projectId)
     {
         Message = "";
         var tasks = (await _projectTaskService.GetTasksByProject(projectId)).ToList();
@@ -69,17 +77,12 @@ public partial class ProjectsViewModel : ObservableObject
         foreach (var task in tasks) {
             Tasks.Add(task);
         }
-
-        if (tasks.Count == 0) {
-            Message = "Задач у выбранного проекта пока нет.";
-        }
     }
 
     [RelayCommand]
     private async Task DeleteProject()
     {
         if (SelectedProject == null) {
-            Message = "Сначала выберите проект для удаления.";
             return;
         }
 
@@ -88,11 +91,11 @@ public partial class ProjectsViewModel : ObservableObject
         if (!confirmed) return;
         bool succes = await _projectService.DeleteProject(SelectedProject.Id);
         if (succes) {
-            Message = $"Проект '{SelectedProject.Name}' удален.";
+            await Shell.Current.DisplayAlert("Удаление",$"Проект '{SelectedProject.Name}' удален.","OK");
             Projects.Remove(SelectedProject);
         }
         else {
-            Message = "Не удалось удалить проект.";
+            await Shell.Current.DisplayAlert("Удаление","Не удалось удалить проект.","OK");
         }
     }
 }

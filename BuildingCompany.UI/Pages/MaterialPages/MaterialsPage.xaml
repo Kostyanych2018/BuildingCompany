@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.MaterialsViewModels"
+             xmlns:dto="clr-namespace:BuildingCompany.Application.DTOs;assembly=BuildingCompany.Application"
+             x:Class="BuildingCompany.UI.Pages.MaterialPages.MaterialsPage"
+             x:DataType="vm:MaterialsViewModel">
+    <ContentPage.MenuBarItems>
+        <MenuBarItem Text="Создать">
+            <MenuFlyoutItem Text="Материал" Command="{Binding GoToCreateMaterialCommand}" />
+        </MenuBarItem>
+    </ContentPage.MenuBarItems>
+    <ContentPage.Content>
+        <ScrollView TranslationY="-20">
+            <VerticalStackLayout Spacing="10" Padding="10">
+                <Label Text="Материалы" Style="{StaticResource TitleLabel}" />
+                <BoxView HeightRequest="2" Color="Black" />
+                <CollectionView ItemsSource="{Binding Materials}"
+                                EmptyView="Материалов пока нет">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="dto:MaterialDto">
+                            <Border Style="{StaticResource MyBorder}">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Name}" />
+                                    <VerticalStackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MaterialsViewModel}},
+                                            Path=GoToMaterialsDetailsCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </VerticalStackLayout.GestureRecognizers>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

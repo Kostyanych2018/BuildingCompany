@@ -1,4 +1,7 @@
+using System;
 using BuildingCompany.Domain.Entities;
+using MongoDB.Bson;
+using Xunit;
 
 namespace BuildingCompany.Domain.Tests;
 
@@ -9,7 +12,7 @@ public class ProjectTaskTests
     {
         string name = "Разработка котлована";
         string? description = "Выемка грунта под фундамент";
-        int projectId = 1;
+        ObjectId projectId = ObjectId.GenerateNewId();
         int completionPercentage = 0;
 
         var task = new ProjectTask(name, description, projectId, completionPercentage);
@@ -29,28 +32,16 @@ public class ProjectTaskTests
     public void Constructor_WithInvalidName_ShouldThrowArgumentNullException(string invalidName)
     {
         string? description = "Описание задачи";
-        int projectId = 1;
+        ObjectId projectId = ObjectId.Empty;
 
         var exception = Assert.Throws<ArgumentNullException>(() => new ProjectTask(invalidName, description, projectId));
         Assert.Equal("name", exception.ParamName);
     }
     
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    public void Constructor_WithInvalidProjectId_ShouldThrowArgumentOutOfRangeException(int invalidProjectId)
-    {
-        string name = "Задача без проекта";
-        string? description = "Описание";
-
-        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new ProjectTask(name, description, invalidProjectId));
-        Assert.Equal("projectId", exception.ParamName);
-    }
-    
     [Fact]
     public void UpdateDetails_WithValidData_ShouldUpdateTaskDetails()
     {
-        var task = new ProjectTask("Старая задача", "Старое описание", 1);
+        var task = new ProjectTask("Старая задача", "Старое описание", ObjectId.Empty);
         string newName = "Новая задача";
         string? newDescription = "Новое описание задачи";
 
@@ -66,7 +57,7 @@ public class ProjectTaskTests
     [InlineData(100)]
     public void UpdateCompletionPercentage_WithValidPercentage_ShouldUpdatePercentage(int percentage)
     {
-        var task = new ProjectTask("Задача", "Описание", 1);
+        var task = new ProjectTask("Задача", "Описание", ObjectId.Empty);
 
         task.UpdateCompletionPercentage(percentage);
 
@@ -77,7 +68,7 @@ public class ProjectTaskTests
     [InlineData(101)]
     public void UpdateCompletionPercentage_WithInvalidPercentage_ShouldThrowArgumentOutOfRangeException(int invalidPercentage)
     {
-        var task = new ProjectTask("Задача", "Описание", 1);
+        var task = new ProjectTask("Задача", "Описание", ObjectId.Empty);
 
         var exception = Assert.Throws<ArgumentOutOfRangeException>(() => task.UpdateCompletionPercentage(invalidPercentage));
         Assert.Equal("percentage", exception.ParamName);
@@ -86,7 +77,7 @@ public class ProjectTaskTests
     [Fact]
     public void SetStatus_WhenNewStatusIsDifferent_ShouldUpdateStatus()
     {
-        var task = new ProjectTask("Задача", "Описание", 1); 
+        var task = new ProjectTask("Задача", "Описание", ObjectId.Empty); 
         ProjectTaskStatus newStatus = ProjectTaskStatus.InProgress;
 
         task.SetStatus(newStatus);
@@ -98,7 +89,7 @@ public class ProjectTaskTests
     public void SetStatus_WhenNewStatusIsSame_ShouldNotChangeStatus()
     {
         ProjectTaskStatus initialStatus = ProjectTaskStatus.InProgress;
-        var task = new ProjectTask("Задача", "Описание", 1);
+        var task = new ProjectTask("Задача", "Описание", ObjectId.Empty);
         task.SetStatus(initialStatus); 
         
         task.SetStatus(initialStatus); 
@@ -106,26 +97,5 @@ public class ProjectTaskTests
         Assert.Equal(initialStatus, task.Status); 
     }
     
-    [Fact]
-    public void AssignEmployee_WithValidEmployee_ShouldSetAssignedEmployeeId()
-    {
-        var task = new ProjectTask("Задача", "Описание", 1);
-        var employee = new Employee("Тест Сотрудник", "Профессия") { Id = 10 }; // Используем конструктор с ID, если Entity позволяет
-
-        task.AssignEmployee(employee);
-
-        Assert.Equal(employee.Id, task.AssignedEmployeeId);
-    }
-    
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-5)]
-    public void AssignEmployee_WithInvalidEmployeeId_ShouldThrowArgumentOutOfRangeException(int invalidEmployeeId)
-    {
-        var task = new ProjectTask("Задача", "Описание", 1);
-        var invalidEmployee = new Employee("Имя", "Должность") { Id = invalidEmployeeId };
-
-        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => task.AssignEmployee(invalidEmployee));
-        Assert.Equal("Id", exception.ParamName);
-    }
+ 
 }

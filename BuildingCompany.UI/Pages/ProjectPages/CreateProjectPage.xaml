@@ -4,26 +4,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.ProjectViewModels"
              x:Class="BuildingCompany.UI.Pages.ProjectPages.CreateProjectPage"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Shell.NavBarIsVisible="False"
              x:DataType="vm:CreateProjectViewModel">
     <ContentPage.Content>
         <ScrollView>
             <VerticalStackLayout Spacing="10" Padding="10">
-                <Label Text="Создание проекта" Style="{StaticResource TitleLabel}" />
-                <Border Style="{StaticResource MyBorder}">
-                    <VerticalStackLayout Spacing="10">
+                <Border Style="{StaticResource MyBorder}" Padding="10">
+                    <VerticalStackLayout Spacing="10" Padding="10">
+                        <Label Text="Создание проекта" Style="{StaticResource TitleLabel}" />
                         <Entry Placeholder="Название проекта" Text="{Binding ProjectName}" />
-                        <Entry Placeholder="Описание (опционально)" Text="{Binding ProjectDescription}"/>
-                        <Entry Placeholder="Бюджет (в BYN)" Text="{Binding ProjectBudget}"/>
+                        <Entry Placeholder="Описание (опционально)" Text="{Binding ProjectDescription}" />
+                        <Entry Placeholder="Бюджет (в BYN)" Text="{Binding ProjectBudget}" />
+                        <Button Text="Создать проект" Command="{Binding CreateProjectCommand}" />
                     </VerticalStackLayout>
                 </Border>
-                <Label Text="{Binding Message}"
-                       TextColor="ForestGreen"
-                       HorizontalOptions="Center"
-                       IsVisible="{Binding Message,
-                       Converter={StaticResource IsStringNotNullOrEmptyConverter}}"/>
-                <Button Text="Создать проект" Command="{Binding CreateProjectCommand}"/>
             </VerticalStackLayout>
         </ScrollView>
     </ContentPage.Content>

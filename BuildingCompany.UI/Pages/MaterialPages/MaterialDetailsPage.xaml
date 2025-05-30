@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.MaterialsViewModels"
+             x:Class="BuildingCompany.UI.Pages.MaterialPages.MaterialDetailsPage"
+             Shell.NavBarIsVisible="False"
+             x:DataType="vm:MaterialDetailsViewModel">
+    <ContentPage.Content>
+        <VerticalStackLayout Spacing="10" Padding="10">
+            <Label Text="Описание материала" Style="{StaticResource TitleLabel}" />
+            <Border Style="{StaticResource MyBorder}" Padding="10">
+                <VerticalStackLayout Spacing="10" Padding="10">
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Название: " FontAttributes="Bold" />
+                                <Span Text="{Binding Material.Name}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Единица измерения: " FontAttributes="Bold" />
+                                <Span Text="{Binding Material.UnitOfMeasure}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Цена за единицу: " FontAttributes="Bold" />
+                                <Span Text="{Binding Material.PriceDisplay}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Остаток: " FontAttributes="Bold" />
+                                <Span Text="{Binding Material.StockDisplay}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>

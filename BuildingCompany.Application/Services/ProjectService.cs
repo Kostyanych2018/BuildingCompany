@@ -1,11 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using BuildingCompany.Application.DTOs;
 using BuildingCompany.Application.Interfaces;
 using BuildingCompany.Application.Mappings;
+using MongoDB.Bson;
 
 namespace BuildingCompany.Application.Services;
 
-public class ProjectService(IRepository<Project> projectRepository) : IProjectService
+public class ProjectService(IUnitOfWork unitOfWork) : IProjectService
 {
+ 
     public async Task<ProjectDto> CreateProject(ProjectDto projectDto)
     {
         var project = new Project(
@@ -13,25 +18,26 @@ public class ProjectService(IRepository<Project> projectRepository) : IProjectSe
             projectDto.Description,
             projectDto.Budget
         );
-        await projectRepository.AddAsync(project);
+        await unitOfWork.ProjectsRepository.AddAsync(project);
+        await unitOfWork.SaveAllAsync();
         return project.ToDto();
     }
 
-    public async Task<ProjectDto?> GetProject(int id)
+    public async Task<ProjectDto?> GetProject(ObjectId id)
     {
-        var project = await projectRepository.GetByIdAsync(id);
+        var project = await unitOfWork.ProjectsRepository.GetByIdAsync(id);
         return project?.ToDto();
     }
 
     public async Task<IEnumerable<ProjectDto>> GetProjects()
     {
-        var projects = await projectRepository.GetAllAsync();
+        var projects = await unitOfWork.ProjectsRepository.GetAllAsync();
         return projects.ToDto();
     }
 
-    public async Task<bool> UpdateProject(int id, ProjectDto projectDto)
+    public async Task<bool> UpdateProject(ProjectDto projectDto)
     {
-        var project = await projectRepository.GetByIdAsync(id);
+        var project = await unitOfWork.ProjectsRepository.GetByIdAsync(projectDto.Id);
         if (project == null) return false;
 
         project.UpdateProject(projectDto.Name, projectDto.Description, projectDto.Budget);
@@ -40,16 +46,18 @@ public class ProjectService(IRepository<Project> projectRepository) : IProjectSe
             project.SetStatus(status);
         }
 
-        await projectRepository.UpdateAsync(project);
+        await unitOfWork.ProjectsRepository.UpdateAsync(project);
+        await unitOfWork.SaveAllAsync();
         return true;
     }
 
-    public async Task<bool> DeleteProject(int id)
+    public async Task<bool> DeleteProject(ObjectId id)
     {
-        var project = await projectRepository.GetByIdAsync(id);
+        var project = await unitOfWork.ProjectsRepository.GetByIdAsync(id);
         if (project == null) return false;
 
-        await projectRepository.DeleteAsync(project);
+        await unitOfWork.ProjectsRepository.DeleteAsync(project);
+        await unitOfWork.SaveAllAsync();
         return true;
     }
 }

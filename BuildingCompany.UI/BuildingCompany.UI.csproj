@@ -62,8 +62,11 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.5" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.60" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.4" />
+        <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
+        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="9.0.0" />
         <PackageReference Include="OxyPlot.Core" Version="2.2.0" />
         <PackageReference Include="OxyPlot.Maui.Skia" Version="1.1.0" />
         <PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.0" />
@@ -87,6 +90,11 @@
         <DependentUpon>ProjectsPage.xaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="appsettings.json" />
+      <EmbeddedResource Include="appsettings.json" />
     </ItemGroup>
 
 </Project>

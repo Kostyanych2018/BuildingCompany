@@ -15,7 +15,7 @@
 
                 <oxy:PlotView Model="{Binding StatusPlot}"
                               HeightRequest="250"
-                              WidthRequest="300" />
+                               />
             </VerticalStackLayout>
         </ScrollView>
     </ContentPage.Content>

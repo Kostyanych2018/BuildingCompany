@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using BuildingCompany.Application.DTOs;
 
 namespace BuildingCompany.Application.Mappings;
@@ -55,5 +57,22 @@ public static class MappingExtensions
     public static IEnumerable<EmployeeDto> ToDto(this IEnumerable<Employee> employees)
     {
         return employees.Select(e => e.ToDto());
+    }
+
+    public static MaterialDto ToDto(this Material material)
+    {
+        return new MaterialDto()
+        {
+            Id = material.Id,
+            Name = material.Name,
+            UnitPrice = material.UnitPrice,
+            UnitOfMeasure = material.UnitOfMeasure,
+            Quantity = material.Quantity,
+        };
+    }
+
+    public static IEnumerable<MaterialDto> ToDto(this IEnumerable<Material> materials)
+    {
+        return materials.Select(m => m.ToDto());
     }
 }

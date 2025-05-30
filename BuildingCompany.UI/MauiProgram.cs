@@ -1,6 +1,10 @@
-﻿using BuildingCompany.Application;
+﻿using System.Reflection;
+using BuildingCompany.Application;
 using BuildingCompany.Infrastructure;
+using BuildingCompany.Infrastructure.Data;
 using CommunityToolkit.Maui;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
@@ -13,6 +17,7 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        string settingsStream = "BuildingCompany.UI.appsettings.json";
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -24,12 +29,19 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
-        
+        var assemnbly = Assembly.GetExecutingAssembly();
+        using var stream = assemnbly.GetManifestResourceStream(settingsStream);
+        builder.Configuration.AddJsonStream(stream);
+        var mongoDbSettings = builder.Configuration.GetSection("MongoDb");
+        var connectionsString = mongoDbSettings["ConnectionString"];
+        var dbName = mongoDbSettings["DatabaseName"];
+        var options = new DbContextOptionsBuilder<AppDbContext>().UseMongoDB(connectionsString,dbName).Options;
         builder.Services
             .AddApplication()
-            .AddInfrastructure()
+            .AddInfrastructure(options)
             .RegisterPages()
             .RegisterViewModels();
+        // DbInitializer.Initialize(builder.Services.BuildServiceProvider()).Wait();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

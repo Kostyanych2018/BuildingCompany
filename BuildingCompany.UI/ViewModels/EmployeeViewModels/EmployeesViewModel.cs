@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BuildingCompany.Application.DTOs;
 using BuildingCompany.Application.Interfaces;
+using BuildingCompany.Domain.Abstractions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OxyPlot;
@@ -39,12 +40,6 @@ public partial class EmployeesViewModel(IEmployeeService employeeService) : Obse
             Employees.Add(dto);
         }
     }
-
-    // [RelayCommand]
-    // private async Task GoToEmployeeDetaiils(EmployeeDto employeeDto)
-    // {
-    //     Idi
-    // }
     
     public void BuildStatusPlot()
     {

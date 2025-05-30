@@ -1,17 +1,16 @@
-using BuildingCompany.Application.DTOs;
-using BuildingCompany.Infrastructure.Repositories;
+using BuildingCompany.Infrastructure.Data;
+using BuildingCompany.Infrastructure.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingCompany.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services,DbContextOptions<AppDbContext> options)
     {
-        services
-            .AddSingleton<IRepository<Project>, InMemoryProjectRepository>()
-            .AddSingleton<IRepository<ProjectTask>, InMemoryProjectTaskRepository>()
-            .AddSingleton<IRepository<Employee>, InMemoryEmployeeRepository>();
+        services.AddSingleton<IUnitOfWork, EfUnitOfWork>()
+            .AddSingleton(new AppDbContext(options));
         return services;
     }
 }

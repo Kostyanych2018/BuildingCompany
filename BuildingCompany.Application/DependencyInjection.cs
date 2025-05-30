@@ -11,7 +11,8 @@ public static class DependencyInjection
         services
             .AddTransient<IProjectService, ProjectService>()
             .AddTransient<IProjectTaskService, ProjectTaskService>()
-            .AddTransient<IEmployeeService, EmployeeService>();
+            .AddTransient<IEmployeeService, EmployeeService>()
+            .AddTransient<IMaterialService, MaterialService>();
         return services;
     }
 }

@@ -1,10 +1,8 @@
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using BuildingCompany.Application.DTOs;
 using BuildingCompany.Application.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.Controls;
+using MongoDB.Bson;
 
 namespace BuildingCompany.UI.ViewModels.ProjectTaskViewModels;
 
@@ -14,23 +12,23 @@ public partial class ProjectTaskDetailsViewModel(
     IProjectTaskService projectTaskService) : ObservableObject
 {
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AssignEmployeeCommand))]
-    private ProjectTaskDto _selectedTask;
+    private ProjectTaskDto? _selectedTask;
 
-    [ObservableProperty] private int _taskId;
-
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AssignEmployeeCommand))] 
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AssignEmployeeCommand))]
     private EmployeeDto? _assignedEmployee;
+
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AssignEmployeeCommand))]
     private EmployeeDto? _selectedEmployee;
+
+    [ObservableProperty] private ObjectId _taskId;
 
     public ObservableCollection<EmployeeDto> Employees { get; } = [];
 
     [RelayCommand]
     private async Task LoadTask()
     {
-        if (TaskId < 0) return;
-        SelectedTask = (await projectTaskService.GetTask(TaskId))!;
-        if (SelectedTask.AssignedEmployeeId.HasValue) {
+        SelectedTask = await projectTaskService.GetTask(TaskId);
+        if (SelectedTask?.AssignedEmployeeId != null) {
             AssignedEmployee = await employeeService.GetEmployee(SelectedTask.AssignedEmployeeId.Value);
         }
     }
@@ -51,7 +49,7 @@ public partial class ProjectTaskDetailsViewModel(
     [RelayCommand(CanExecute = nameof(CanAssignEmployee))]
     private async Task AssignEmployee()
     {
-        bool success = await projectTaskService.AssignEmployeeToTask(SelectedTask.Id, SelectedEmployee!.Id);
+        bool success = await projectTaskService.AssignEmployeeToTask(SelectedTask.Id, SelectedEmployee.Id);
         if (success) {
             await LoadTask();
         }
@@ -64,6 +62,6 @@ public partial class ProjectTaskDetailsViewModel(
     private bool CanAssignEmployee()
     {
         return SelectedEmployee != null
-               && (SelectedTask.AssignedEmployeeId != SelectedEmployee.Id);
+               && (SelectedTask?.AssignedEmployeeId ==null);
     }
 }

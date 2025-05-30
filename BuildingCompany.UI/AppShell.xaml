@@ -8,6 +8,7 @@
     xmlns:pages="clr-namespace:BuildingCompany.UI.Pages"
     xmlns:employeePages="clr-namespace:BuildingCompany.UI.Pages.EmployeePages"
     xmlns:projectPages="using:BuildingCompany.UI.Pages.ProjectPages"
+    xmlns:materialPages="clr-namespace:BuildingCompany.UI.Pages.MaterialPages"
     Shell.FlyoutBehavior="Flyout">
 
 
@@ -20,5 +21,11 @@
         <ShellContent
             ContentTemplate="{DataTemplate employeePages:EmployeesPage}"
             Route="EmployeesPage" />
+    </FlyoutItem>
+    <FlyoutItem Title="Материалы">
+        <ShellContent
+            ContentTemplate="{DataTemplate materialPages:MaterialsPage}"
+            Route="MaterialsPage"
+            />
     </FlyoutItem>
 </Shell>

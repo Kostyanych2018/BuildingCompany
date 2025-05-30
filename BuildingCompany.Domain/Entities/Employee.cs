@@ -1,3 +1,6 @@
+using System;
+using MongoDB.Bson;
+
 namespace BuildingCompany.Domain.Entities;
 
 public class Employee : Entity, IEquatable<Employee>
@@ -6,7 +9,7 @@ public class Employee : Entity, IEquatable<Employee>
     public string Position { get; set; } = null!;
     public EmployeeStatus Status { get; set; }
 
-    public int? AssignedTaskId { get; set; }
+    public ObjectId? AssignedTaskId { get; set; }
 
     public Employee() { }
 

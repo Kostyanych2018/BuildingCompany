@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.ProjectViewModels"
+             x:Class="BuildingCompany.UI.Pages.ProjectPages.UpdateProjectPage"
+             Shell.NavBarIsVisible="False"
+             x:DataType="vm:UpdateProjectViewModel">
+    <ContentPage.Content>
+        <VerticalStackLayout Spacing="15" Padding="10">
+            <Border Style="{StaticResource MyBorder}">
+                <VerticalStackLayout Spacing="15" Padding="10">
+                    <Label Text="Редактирование проекта" Style="{StaticResource TitleLabel}" />
+                    <Label Text="Название проекта:" />
+                    <Entry Text="{Binding ProjectName}"></Entry>
+                    <Label Text="Описание (опционально):" />
+                    <Entry Text="{Binding ProjectDescription}"></Entry>
+                    <Label Text="Бюджет (в BYN):" />
+                    <Entry Text="{Binding ProjectBudget}"></Entry>
+                    <Button Text="Сохранить" Command="{Binding UpdateProjectCommand}"></Button>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>

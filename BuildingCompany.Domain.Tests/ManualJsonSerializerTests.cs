@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using BuildingCompany.Domain.Entities;
 using BuildingCompany.Serialization;
+using Xunit;
 
 namespace BuildingCompany.Domain.Tests;
 
@@ -108,7 +111,7 @@ public class ManualJsonSerializerTests
             string? baseName,
             decimal derivedValue,
             bool isDerived,
-            List<string>? items=null) : base(baseId, baseName)
+            List<string>? items = null) : base(baseId, baseName)
         {
             DerivedValue = derivedValue;
             BaseName = baseName;
@@ -134,7 +137,7 @@ public class ManualJsonSerializerTests
         Assert.Contains("\"IsDerived\":true", json);
         Assert.Contains("\"Items\":[\"item1\",\"item2\"]", json);
     }
-    
+
     public class SimpleObject
     {
         public int Id { get; set; }
@@ -162,13 +165,14 @@ public class ManualJsonSerializerTests
         Assert.Equal(99.99m, obj.Price);
         Assert.Equal(0.5, obj.Ratio);
     }
-    
+
     public class Customer
     {
         public int CustomerId { get; set; }
         public string? Name { get; set; }
         public string? Email { get; set; }
     }
+
     public class Order
     {
         public int OrderId { get; set; }
@@ -176,7 +180,7 @@ public class ManualJsonSerializerTests
         public Customer? CustomerInfo { get; set; }
         public List<Item>? Items { get; set; }
     }
-    
+
     public class Item
     {
         public string? Name { get; set; }

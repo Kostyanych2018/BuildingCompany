@@ -43,9 +43,7 @@
                                  Progress="{Binding SelectedTask.CompletionPercentage,
                                  Converter={StaticResource IntToProgressConverter}}"
                                  ProgressColor="MediumPurple" />
-                    <Label Text="{Binding SelectedTask.CompletionPercentage,StringFormat=
-                '{0}%'}" HorizontalOptions="Center" />
-                    <BoxView HeightRequest="2" Color="Black" Margin="0,5,0,5"/>
+                    <Label Text="{Binding SelectedTask.CompletionPercentage,StringFormat='{0}%'}" HorizontalOptions="Center" />
                     
                     <Label IsVisible="{Binding SelectedTask.AssignedEmployeeId,
                            Converter={StaticResource IsNotNullConverter}}">

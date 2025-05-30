@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -158,7 +161,7 @@ public class ManualJsonSerializer : ISerializer
             // JSON boolean -> C# bool
             // JSON number -> C# decimal
             // JSON string representing number/bool -> C# int/bool (needs Convert.ChangeType or TryParse)
-            
+
             Type nullableUnderlyingType = Nullable.GetUnderlyingType(targetType)!;
             if (nullableUnderlyingType != null) {
                 // If target type is nullable (e.g., int?), try converting to the underlying type (int)
@@ -324,8 +327,9 @@ public class ManualJsonSerializer : ISerializer
             if (index >= json.Length || json[index] != '\"') {
                 if (json[index] == '}') {
                     index++;
-                    return objDict; 
+                    return objDict;
                 }
+
                 throw new JsonException($"Ожидался ключ (строка в двойных кавычках) или '}}' в позиции {index}");
             }
 
@@ -364,14 +368,30 @@ public class ManualJsonSerializer : ISerializer
             index++;
             if (escaped) {
                 switch (currChar) {
-                    case '"': sb.Append('"'); break;
-                    case '\\': sb.Append('\\'); break;
-                    case '/': sb.Append('/'); break;
-                    case 'b': sb.Append('\b'); break;
-                    case 'f': sb.Append('\f'); break;
-                    case 'n': sb.Append('\n'); break;
-                    case 'r': sb.Append('\r'); break;
-                    case 't': sb.Append('\t'); break;
+                    case '"':
+                        sb.Append('"');
+                        break;
+                    case '\\':
+                        sb.Append('\\');
+                        break;
+                    case '/': 
+                        sb.Append('/');
+                        break;
+                    case 'b': 
+                        sb.Append('\b');
+                        break;
+                    case 'f': 
+                        sb.Append('\f');
+                        break;
+                    case 'n': 
+                        sb.Append('\n');
+                        break;
+                    case 'r': 
+                        sb.Append('\r');
+                        break;
+                    case 't': 
+                        sb.Append('\t');
+                        break;
                     default:
                         sb.Append(currChar);
                         break;

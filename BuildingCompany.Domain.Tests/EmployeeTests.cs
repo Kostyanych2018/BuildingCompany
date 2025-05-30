@@ -1,4 +1,7 @@
+using System;
 using BuildingCompany.Domain.Entities;
+using MongoDB.Bson;
+using Xunit;
 
 namespace BuildingCompany.Domain.Tests;
 
@@ -117,7 +120,7 @@ public class EmployeeTests
     {
         
         var employee = new Employee("Иван Иванов", "Прораб");
-        var task = new ProjectTask("Тестовая задача", "Описание", 1) { Id = 123 }; 
+        var task = new ProjectTask("Тестовая задача", "Описание", ObjectId.GenerateNewId()); 
         employee.AssignTask(task);
         Assert.Equal(task.Id, employee.AssignedTaskId);
     }

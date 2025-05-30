@@ -1,3 +1,6 @@
+using System;
+using MongoDB.Bson;
+
 namespace BuildingCompany.Domain.Entities;
 
 public class ProjectTask : Entity, IEquatable<ProjectTask>
@@ -6,19 +9,16 @@ public class ProjectTask : Entity, IEquatable<ProjectTask>
     public string? Description { get; set; }
     public ProjectTaskStatus Status { get; set; }
     public int CompletionPercentage { get; set; }
-    public int ProjectId { get; set; }
-    public int? AssignedEmployeeId { get; set; }
+    public ObjectId ProjectId { get; set; }
+    public ObjectId? AssignedEmployeeId { get; set; }
     
     public ProjectTask(){}
 
     public ProjectTask(string name, string? description,
-        int projectId, int completionPercentage = 0)
+        ObjectId projectId, int completionPercentage = 0)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentNullException(nameof(name), "Название задачи не может быть пустым.");
-        if (projectId <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(projectId), "ID проекта должно быть положительным");
-        }
         
         Name = name;
         Description = description;
@@ -52,19 +52,13 @@ public class ProjectTask : Entity, IEquatable<ProjectTask>
             Status = status;
     }
 
-    public void AddToProject(int projectId)
+    public void AddToProject(ObjectId projectId)
     {
-        if (projectId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(projectId),
-                "ID проекта для добавления должен быть положительным.");
         ProjectId = projectId;
     }
 
     public void AssignEmployee(Employee employee)
     {
-        if (employee.Id <= 0)
-            throw new ArgumentOutOfRangeException(nameof(employee.Id), 
-                "ID сотрудника должен быть положительным.");
         AssignedEmployeeId = employee.Id;
     }
 

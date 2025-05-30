@@ -1,9 +1,13 @@
 using BuildingCompany.UI.Pages.EmployeePages;
+using BuildingCompany.UI.Pages.MaterialPages;
 using BuildingCompany.UI.Pages.ProjectPages;
 using BuildingCompany.UI.Pages.ProjectTaskPages;
 using BuildingCompany.UI.ViewModels.EmployeeViewModels;
+using BuildingCompany.UI.ViewModels.MaterialsViewModels;
 using BuildingCompany.UI.ViewModels.ProjectTaskViewModels;
 using BuildingCompany.UI.ViewModels.ProjectViewModels;
+using CommunityToolkit.Maui;
+using Microsoft.Extensions.DependencyInjection;
 using ProjectsPage = BuildingCompany.UI.Pages.ProjectPages.ProjectsPage;
 using ProjectsViewModel = BuildingCompany.UI.ViewModels.ProjectViewModels.ProjectsViewModel;
 
@@ -16,8 +20,13 @@ public static class DependencyInjection
         services
             .AddTransient<ProjectsPage>()
             .AddTransient<CreateProjectPage>()
+            .AddTransient<UpdateProjectPage>()
             .AddTransient<ProjectTaskDetailsPage>()
-            .AddTransient<EmployeesPage>();
+            .AddTransient<EmployeesPage>()
+            .AddTransient<MaterialsPage>()
+            .AddTransient<CreateMaterialPage>()
+            .AddTransient<MaterialDetailsPage>();
+            
         return services;
     }
 
@@ -26,8 +35,13 @@ public static class DependencyInjection
         services
             .AddTransient<ProjectsViewModel>()
             .AddTransient<CreateProjectViewModel>()
+            .AddTransient<UpdateProjectViewModel>()
             .AddTransient<ProjectTaskDetailsViewModel>()
-            .AddTransient<EmployeesViewModel>();
+            .AddTransient<EmployeesViewModel>()
+            .AddTransient<MaterialsViewModel>()
+            .AddTransient<CreateMaterialViewModel>()
+            .AddTransient<MaterialDetailsViewModel>();
+            
         return services;
     }
 }
