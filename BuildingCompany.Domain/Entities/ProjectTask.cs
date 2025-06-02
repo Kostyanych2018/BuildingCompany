@@ -12,49 +12,65 @@ public class ProjectTask : Entity, IEquatable<ProjectTask>
     public ObjectId ProjectId { get; set; }
     public ObjectId? AssignedEmployeeId { get; set; }
     
-    public ProjectTask(){}
+    // Требования к сотруднику
+    public string? RequiredPosition { get; set; }
+    public int? RequiredExperience { get; set; }
+    public int? RequiredCertificationLevel { get; set; }
 
-    public ProjectTask(string name, string? description,
-        ObjectId projectId, int completionPercentage = 0)
+    public ProjectTask() { }
+
+    public ProjectTask(string name, string? description, ObjectId projectId, 
+        string? requiredPosition = null, int? requiredExperience = null, int? requiredCertificationLevel = null)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentNullException(nameof(name), "Название задачи не может быть пустым.");
-        
+            throw new ArgumentException("Название задачи не может быть пустым.", nameof(name));
+
+        if (requiredCertificationLevel.HasValue && (requiredCertificationLevel < 1 || requiredCertificationLevel > 5))
+            throw new ArgumentException("Требуемый уровень сертификации должен быть от 1 до 5.", nameof(requiredCertificationLevel));
+
+        if (requiredExperience.HasValue && requiredExperience < 0)
+            throw new ArgumentException("Требуемый опыт работы не может быть отрицательным.", nameof(requiredExperience));
+
         Name = name;
         Description = description;
-        Status = ProjectTaskStatus.Created;
-        CompletionPercentage = completionPercentage;
         ProjectId = projectId;
-        AssignedEmployeeId = null;
+        Status = ProjectTaskStatus.Created;
+        CompletionPercentage = 0;
+        RequiredPosition = requiredPosition;
+        RequiredExperience = requiredExperience;
+        RequiredCertificationLevel = requiredCertificationLevel;
     }
 
-    public void UpdateDetails(string name, string? description)
+    public void UpdateDetails(string name, string? description, 
+        string? requiredPosition, int? requiredExperience, int? requiredCertificationLevel)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentNullException(nameof(name), "Название задачи не может быть пустым.");
+            throw new ArgumentException("Название задачи не может быть пустым.", nameof(name));
+
+        if (requiredCertificationLevel.HasValue && (requiredCertificationLevel < 1 || requiredCertificationLevel > 5))
+            throw new ArgumentException("Требуемый уровень сертификации должен быть от 1 до 5.", nameof(requiredCertificationLevel));
+
+        if (requiredExperience.HasValue && requiredExperience < 0)
+            throw new ArgumentException("Требуемый опыт работы не может быть отрицательным.", nameof(requiredExperience));
+
         Name = name;
         Description = description;
+        RequiredPosition = requiredPosition;
+        RequiredExperience = requiredExperience;
+        RequiredCertificationLevel = requiredCertificationLevel;
+    }
+
+    public void UpdateStatus(ProjectTaskStatus status)
+    {
+        Status = status;
     }
 
     public void UpdateCompletionPercentage(int percentage)
     {
         if (percentage < 0 || percentage > 100)
-            throw new ArgumentOutOfRangeException(nameof(percentage), "Процент выполнения должен быть между 0 и 100.");
+            throw new ArgumentException("Процент выполнения должен быть от 0 до 100.", nameof(percentage));
+
         CompletionPercentage = percentage;
-        if (CompletionPercentage == 100) {
-            Status = ProjectTaskStatus.Completed;
-        }
-    }
-
-    public void SetStatus(ProjectTaskStatus status)
-    {
-        if (Status != status)
-            Status = status;
-    }
-
-    public void AddToProject(ObjectId projectId)
-    {
-        ProjectId = projectId;
     }
 
     public void AssignEmployee(Employee employee)
@@ -66,11 +82,15 @@ public class ProjectTask : Entity, IEquatable<ProjectTask>
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Name == other.Name && Description == other.Description
-                                  && Status == other.Status 
-                                  && CompletionPercentage == other.CompletionPercentage
-                                  && ProjectId == other.ProjectId
-                                  && AssignedEmployeeId == other.AssignedEmployeeId;
+        return Name == other.Name && 
+               Description == other.Description && 
+               Status == other.Status && 
+               CompletionPercentage == other.CompletionPercentage && 
+               ProjectId == other.ProjectId && 
+               AssignedEmployeeId == other.AssignedEmployeeId && 
+               RequiredPosition == other.RequiredPosition &&
+               RequiredExperience == other.RequiredExperience &&
+               RequiredCertificationLevel == other.RequiredCertificationLevel;
     }
 
     public override bool Equals(object? obj)
@@ -83,8 +103,19 @@ public class ProjectTask : Entity, IEquatable<ProjectTask>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Name, Description, (int)Status, CompletionPercentage, ProjectId, AssignedEmployeeId);
+        var hashCode = new HashCode();
+        hashCode.Add(Name);
+        hashCode.Add(Description);
+        hashCode.Add((int)Status);
+        hashCode.Add(CompletionPercentage);
+        hashCode.Add(ProjectId);
+        hashCode.Add(AssignedEmployeeId);
+        hashCode.Add(RequiredPosition);
+        hashCode.Add(RequiredExperience);
+        hashCode.Add(RequiredCertificationLevel);
+        return hashCode.ToHashCode();
     }
+    
 }
 
 public enum ProjectTaskStatus

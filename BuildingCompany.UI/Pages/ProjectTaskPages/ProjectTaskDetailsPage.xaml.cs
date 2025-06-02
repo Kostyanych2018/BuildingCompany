@@ -22,5 +22,6 @@ public partial class ProjectTaskDetailsPage : ContentPage
         base.OnAppearing();
         await _viewModel.LoadTaskCommand.ExecuteAsync(null);
         await _viewModel.LoadEmployeesCommand.ExecuteAsync(null);
+        await _viewModel.LoadMaterialsCommand.ExecuteAsync(null);
     }
 }

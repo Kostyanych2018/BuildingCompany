@@ -10,12 +10,13 @@ public partial class App : Microsoft.Maui.Controls.Application
     {
         InitializeComponent();
     }
+            
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
         var window =  new Window(new AppShell())
         {
-            Height = 700,
+            Height = 600,
             Width = 500
         };
         return window;

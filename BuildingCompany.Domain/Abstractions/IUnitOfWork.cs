@@ -8,6 +8,7 @@ public interface IUnitOfWork
     IRepository<ProjectTask> ProjectTaskRepository { get; }
     IRepository<Employee> EmployeesRepository { get; }
     IRepository<Material> MaterialsRepository { get; }
+    IRepository<TaskMaterialRequirement> TaskMaterialRequirementRepository { get; }
     
     Task SaveAllAsync();
     Task CreateDatabaseAsync();

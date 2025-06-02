@@ -1,7 +1,6 @@
 using BuildingCompany.Serialization;
-using Xunit;
 
-namespace BuildingCompany.Domain.Tests;
+namespace BuildingCompany.Domain.Tests.DomainTests;
 
 public class ManualXmlSerializerTests
 {

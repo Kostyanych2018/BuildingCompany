@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:BuildingCompany.UI.Converters"
+             x:Class="BuildingCompany.UI.Pages.ProjectTaskPages.CreateTaskPage"
+             xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.ProjectTaskViewModels"
+             Shell.NavBarIsVisible="False"
+             x:DataType="vm:CreateTaskViewModel">
+    
+    <ContentPage.Resources>
+        <converters:NumericValidationBehavior x:Key="NumericValidationBehavior" />
+    </ContentPage.Resources>
+    
+    <ScrollView TranslationY="-10">
+        <VerticalStackLayout Padding="10" Spacing="10">
+            <Label Text="Создание задачи" Style="{StaticResource TitleLabel}"/>
+            <Label Text="Название задачи" FontSize="16"/>
+            <Entry Text="{Binding Name}" Placeholder="Введите название задачи"/>
+            
+            <Label Text="Описание" FontSize="16"/>
+            <Editor Text="{Binding Description}" Placeholder="Введите описание задачи" HeightRequest="100"/>
+            
+            <Label Text="Требования к сотруднику" FontSize="18" FontAttributes="Bold" Margin="0,10,0,0"/>
+            
+            <Border Padding="10" Style="{StaticResource MyBorder}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Должность" FontSize="16"/>
+                    <Entry Text="{Binding RequiredPosition}" Placeholder="Например: Каменщик, Сварщик, Прораб"/>
+                    
+                    <Label Text="Минимальный опыт работы (лет)" FontSize="16"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Entry Text="{Binding RequiredExperience}" 
+                               Placeholder="Введите требуемый опыт" 
+                               Keyboard="Numeric"
+                               IsEnabled="{Binding IsRequiredExperienceEnabled}">
+                            <Entry.Behaviors>
+                                <converters:NumericValidationBehavior />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <CheckBox Grid.Column="1" 
+                                  IsChecked="{Binding IsRequiredExperienceEnabled}" 
+                                  VerticalOptions="Center"/>
+                    </Grid>
+                    
+                    <Label Text="Минимальный уровень сертификации (1-5)" FontSize="16"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Start" IsEnabled="{Binding IsRequiredCertificationEnabled}">
+                            <Button Text="1" Command="{Binding SetRequiredCertificationLevelCommand}" CommandParameter="1"
+                                    BackgroundColor="{Binding RequiredCertificationLevel, Converter={StaticResource CertificationLevelColorConverter}, ConverterParameter=1}"
+                                    WidthRequest="50" HeightRequest="50" />
+                            <Button Text="2" Command="{Binding SetRequiredCertificationLevelCommand}" CommandParameter="2"
+                                    BackgroundColor="{Binding RequiredCertificationLevel, Converter={StaticResource CertificationLevelColorConverter}, ConverterParameter=2}"
+                                    WidthRequest="50" HeightRequest="50" />
+                            <Button Text="3" Command="{Binding SetRequiredCertificationLevelCommand}" CommandParameter="3"
+                                    BackgroundColor="{Binding RequiredCertificationLevel, Converter={StaticResource CertificationLevelColorConverter}, ConverterParameter=3}"
+                                    WidthRequest="50" HeightRequest="50" />
+                            <Button Text="4" Command="{Binding SetRequiredCertificationLevelCommand}" CommandParameter="4"
+                                    BackgroundColor="{Binding RequiredCertificationLevel, Converter={StaticResource CertificationLevelColorConverter}, ConverterParameter=4}"
+                                    WidthRequest="50" HeightRequest="50" />
+                            <Button Text="5" Command="{Binding SetRequiredCertificationLevelCommand}" CommandParameter="5"
+                                    BackgroundColor="{Binding RequiredCertificationLevel, Converter={StaticResource CertificationLevelColorConverter}, ConverterParameter=5}"
+                                    WidthRequest="50" HeightRequest="50" />
+                        </HorizontalStackLayout>
+                        <CheckBox Grid.Column="1" 
+                                  IsChecked="{Binding IsRequiredCertificationEnabled}" 
+                                  VerticalOptions="Center"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+            
+            <Button Text="Создать задачу" 
+                    Command="{Binding CreateTaskCommand}"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    Margin="0,20,0,0"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage> 

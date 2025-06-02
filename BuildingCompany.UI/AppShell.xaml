@@ -9,7 +9,8 @@
     xmlns:employeePages="clr-namespace:BuildingCompany.UI.Pages.EmployeePages"
     xmlns:projectPages="using:BuildingCompany.UI.Pages.ProjectPages"
     xmlns:materialPages="clr-namespace:BuildingCompany.UI.Pages.MaterialPages"
-    Shell.FlyoutBehavior="Flyout">
+    Shell.FlyoutBehavior="Flyout"
+    FlyoutBackgroundColor="LightYellow">
 
 
     <FlyoutItem Title="Проекты">
@@ -25,7 +26,6 @@
     <FlyoutItem Title="Материалы">
         <ShellContent
             ContentTemplate="{DataTemplate materialPages:MaterialsPage}"
-            Route="MaterialsPage"
-            />
+            Route="MaterialsPage" />
     </FlyoutItem>
 </Shell>

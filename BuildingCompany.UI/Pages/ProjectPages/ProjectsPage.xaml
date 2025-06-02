@@ -5,10 +5,12 @@
              xmlns:projectViewModels="using:BuildingCompany.UI.ViewModels.ProjectViewModels"
              xmlns:dto="clr-namespace:BuildingCompany.Application.DTOs;assembly=BuildingCompany.Application"
              x:Class="BuildingCompany.UI.Pages.ProjectPages.ProjectsPage"
-             x:DataType="projectViewModels:ProjectsViewModel">
+             x:DataType="projectViewModels:ProjectsViewModel" >
     <ContentPage.MenuBarItems>
         <MenuBarItem Text="Создать">
             <MenuFlyoutItem Text="Проект" Command="{Binding GoToCreateProjectCommand}" />
+            <MenuFlyoutItem Text="Задачу" Command="{Binding GoToCreateTaskCommand}" 
+IsEnabled="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}" />
         </MenuBarItem>
         <MenuBarItem Text="Удалить">
             <MenuFlyoutItem Text="Проект" Command="{Binding DeleteProjectCommand}"
@@ -52,9 +54,9 @@
                 <CollectionView ItemsSource="{Binding Tasks}"
                                 EmptyView="Нет задач для данного проекта"
                                 IsVisible="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}">
-                    <!-- <CollectionView.ItemsLayout> -->
-                    <!--     <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" /> -->
-                    <!-- </CollectionView.ItemsLayout> -->
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                    </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="dto:ProjectTaskDto ">
                             <Border Style="{StaticResource MyBorder}">
@@ -65,7 +67,17 @@
                                         AncestorType={x:Type projectViewModels:ProjectsViewModel}}, Path=GoToTaskDetailsCommand}"
                                         CommandParameter="{Binding}"/>
                                 </Border.GestureRecognizers>
-                                    <Label Text="{Binding Name}" />
+                                    <Label FontSize="15" HorizontalTextAlignment="Center">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Name}" />
+                                                <Span Text="&#160;&#160;&#160;&#160;&#160;&#160;" />
+                                                <Span Text="{Binding Status}"
+                                                      TextColor="{Binding Status,
+                                          Converter={StaticResource TaskStatusToColorConverter}}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

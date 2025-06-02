@@ -11,4 +11,5 @@ public interface IProjectTaskService
     Task<bool> UpdateTask(ProjectTaskDto projectTaskDto);
     Task<bool> DeleteTask(ObjectId id);
     Task<bool> AssignEmployeeToTask(ObjectId taskId, ObjectId employeeId);
+    Task<IEnumerable<EmployeeDto>> GetQualifiedEmployees(ObjectId taskId);
 }

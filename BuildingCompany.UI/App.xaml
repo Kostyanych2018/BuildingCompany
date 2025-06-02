@@ -5,6 +5,7 @@
              xmlns:local="clr-namespace:BuildingCompany.UI"
              xmlns:convert="clr-namespace:CommunityToolkit.Maui.Converters;assembly=CommunityToolkit.Maui"
              xmlns:custom="clr-namespace:BuildingCompany.UI.Converters"
+             xmlns:converters="clr-namespace:BuildingCompany.UI.Converters"
              x:Class="BuildingCompany.UI.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -19,6 +20,12 @@
             <custom:ProjectStatusToColorConverter x:Key="ProjectStatusToColorConverter"></custom:ProjectStatusToColorConverter>
             <custom:TaskStatusToColorConverter x:Key="TaskStatusToColorConverter"></custom:TaskStatusToColorConverter>
             <custom:IntToProgressConverter x:Key="IntToProgressConverter"></custom:IntToProgressConverter>
+            <custom:AvailabilityStatusToColorConverter x:Key="AvailabilityStatusToColorConverter"></custom:AvailabilityStatusToColorConverter>
+            <custom:BoolToColorConverter x:Key="BoolToColorConverter"></custom:BoolToColorConverter>
+            <custom:IsGreaterThanZeroConverter x:Key="IsGreaterThanZeroConverter"></custom:IsGreaterThanZeroConverter>
+            <custom:IsInProgressConverter x:Key="IsInProgressConverter"></custom:IsInProgressConverter>
+            <custom:BudgetStatusConverter x:Key="BudgetStatusConverter"></custom:BudgetStatusConverter>
+            <custom:CertificationLevelColorConverter x:Key="CertificationLevelColorConverter"></custom:CertificationLevelColorConverter>
             <Style x:Key="TitleLabel" TargetType="Button">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="20" />
@@ -35,6 +42,11 @@
                 <Setter Property="Stroke" Value="{SolidColorBrush Black}"/>
                 <Setter Property="Padding" Value="10"/>
             </Style>
+            <converters:StringNullOrEmptyConverter x:Key="StringNullOrEmptyConverter" />
+            <converters:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter" />
+            <converters:NullConverter x:Key="NullConverter" />
+            <converters:NotNullConverter x:Key="NotNullConverter" />
+            <converters:EmployeeStatusToColorConverter x:Key="EmployeeStatusToColorConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -3,70 +3,216 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.ProjectTaskViewModels"
+             xmlns:dtos="clr-namespace:BuildingCompany.Application.DTOs;assembly=BuildingCompany.Application"
+             xmlns:behaviors="clr-namespace:BuildingCompany.UI.Converters"
              Shell.NavBarIsVisible="False"
              x:Class="BuildingCompany.UI.Pages.ProjectTaskPages.ProjectTaskDetailsPage"
-             x:DataType="vm:ProjectTaskDetailsViewModel">
+             x:DataType="vm:ProjectTaskDetailsViewModel"
+             Title="Детали задачи">
     <ContentPage.Content>
-        <VerticalStackLayout Spacing="10" Padding="10">
-            <Label Text="Детали задачи" Style="{StaticResource TitleLabel}" />
-            <Border Style="{StaticResource MyBorder}">
-                <VerticalStackLayout Spacing="10">
-                    <Label>
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Проект: " FontAttributes="Bold" />
-                                <Span Text="{Binding SelectedTask.Name}" />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label IsVisible="{Binding SelectedTask.Description,
-                     Converter={StaticResource IsStringNotNullOrEmptyConverter}}">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Описание: " FontAttributes="Bold" />
-                                <Span Text="{Binding SelectedTask.Description}" />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label>
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Статус: " FontAttributes="Bold" />
-                                <Span Text="{Binding SelectedTask.Status}"
-                                      TextColor="{Binding SelectedTask.Status,
-                                      Converter={StaticResource TaskStatusToColorConverter}}" />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Text="Прогресс выполнения: " FontAttributes="Bold" />
-                    <ProgressBar Width="3"
-                                 Progress="{Binding SelectedTask.CompletionPercentage,
-                                 Converter={StaticResource IntToProgressConverter}}"
-                                 ProgressColor="MediumPurple" />
-                    <Label Text="{Binding SelectedTask.CompletionPercentage,StringFormat='{0}%'}" HorizontalOptions="Center" />
-                    
-                    <Label IsVisible="{Binding SelectedTask.AssignedEmployeeId,
-                           Converter={StaticResource IsNotNullConverter}}">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Ответственный сотрудник: " FontAttributes="Bold" />
-                                <Span Text="{Binding AssignedEmployee.FullName}"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Text="Сотрудник не назначен" HorizontalOptions="Center" TextColor="Gray"
-                           IsVisible="{Binding SelectedTask.AssignedEmployeeId,
-                           Converter={StaticResource IsNullConverter}}"/>
-                    <VerticalStackLayout Spacing="5">
-                        <Picker Title="Выберите сотрудника:"
-                                ItemsSource="{Binding Employees}"
-                                SelectedItem="{Binding SelectedEmployee}"
-                                ItemDisplayBinding="{Binding FullName}"/>
-                        <Button Text="Назначить"
-                                Command="{Binding AssignEmployeeCommand}"/>
+        <ScrollView>
+            <VerticalStackLayout Spacing="10" Padding="10">
+                <Label Text="Детали задачи" Style="{StaticResource TitleLabel}" />
+
+                <Border Style="{StaticResource MyBorder}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Проект: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedTask.Name}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label IsVisible="{Binding SelectedTask.Description,
+                         Converter={StaticResource IsStringNotNullOrEmptyConverter}}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Описание: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedTask.Description}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Статус: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedTask.Status}"
+                                          TextColor="{Binding SelectedTask.Status,
+                                          Converter={StaticResource TaskStatusToColorConverter}}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label IsVisible="{Binding SelectedTask.RequiredPosition,
+                        Converter={StaticResource IsNotNullConverter}}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Требуемая должность: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedTask.RequiredPosition}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label IsVisible="{Binding SelectedTask.RequiredExperience,
+                        Converter={StaticResource IsNotNullConverter}}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Требуемый опыт: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedTask.RequiredExperience}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label IsVisible="{Binding SelectedTask.RequiredCertificationLevel,
+                        Converter={StaticResource IsNotNullConverter}}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Требуемый уровень сертификации: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedTask.RequiredCertificationLevel}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Text="Прогресс выполнения: " FontAttributes="Bold" />
+
+                        <ProgressBar Width="3"
+                                     Progress="{Binding AnimatedProgressPercent}"
+                                     ProgressColor="Green" />
+
+
+                        <Label Text="{Binding AnimatedProgressValue,StringFormat='{0}%'}" HorizontalOptions="Center" />
+
+
                     </VerticalStackLayout>
-                </VerticalStackLayout>
-            </Border>
-        </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource MyBorder}" IsVisible="{Binding IsTaskNotCompleted}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Назначение сотрудника" FontAttributes="Bold" FontSize="16" />
+
+                        <Label IsVisible="{Binding SelectedTask.AssignedEmployeeId,
+                               Converter={StaticResource IsNotNullConverter}}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Ответственный сотрудник: " FontAttributes="Bold" />
+                                    <Span Text="{Binding AssignedEmployee.FullName}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource MyBorder}" IsVisible="{Binding AssignedEmployee,Converter={StaticResource IsNotNullConverter}}">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Инфо о сотруднике" Style="{StaticResource SubTitleLabel}"></Label>
+                                <Label Text="{Binding AssignedEmployee.Position, StringFormat='Должность: {0}'}"></Label>
+                                <Label Text="{Binding AssignedEmployee.Experience, StringFormat='Опыт (года/лет): {0}'}"></Label>
+                                <Label Text="{Binding AssignedEmployee.CertificationLevel, StringFormat='Ур-ь сертиф-ции: {0}'}"></Label>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Label Text="Сотрудник не назначен" HorizontalOptions="Center" TextColor="Gray"
+                               IsVisible="{Binding SelectedTask.AssignedEmployeeId,
+                               Converter={StaticResource IsNullConverter}}" />
+                        <VerticalStackLayout Spacing="5" IsVisible="{Binding AssignedEmployee,Converter={StaticResource IsNullConverter}}">
+                            <Picker Title="Выберите сотрудника:"
+                                    ItemsSource="{Binding Employees}"
+                                    SelectedItem="{Binding SelectedEmployee}"
+                                    ItemDisplayBinding="{Binding FullName}" />
+                            <Button Text="Назначить"
+                                    Command="{Binding AssignEmployeeCommand}" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource MyBorder}" IsVisible="{Binding IsTaskNotCompleted}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Требования к материалам" FontAttributes="Bold" FontSize="16" />
+
+                        <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto, Auto" RowSpacing="4">
+                            <Picker Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                                    Title="Выберите материал"
+                                    ItemsSource="{Binding Materials}"
+                                    SelectedItem="{Binding SelectedMaterial}"
+                                    ItemDisplayBinding="{Binding DisplayNameWithUnit}" />
+
+                            <Label Grid.Row="1" Grid.Column="0" Text="Количество:" VerticalOptions="Center" />
+                            <Entry Grid.Row="1" Grid.Column="1"
+                                   Text="{Binding RequiredQuantity}"
+                                   Placeholder="Введите количество">
+                                <Entry.Behaviors>
+                                    <behaviors:NumericValidationBehavior />
+                                </Entry.Behaviors>
+                            </Entry>
+
+                            <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                    Text="Добавить материал"
+                                    Command="{Binding AddMaterialRequirementCommand}" />
+                        </Grid>
+
+                        <Label Text="Список требуемых материалов:" FontAttributes="Bold"
+                               IsVisible="{Binding MaterialRequirements.Count, Converter={StaticResource IsGreaterThanZeroConverter}}" />
+
+                        <CollectionView ItemsSource="{Binding MaterialRequirements}"
+                                        SelectionMode="None"
+                                        EmptyView="Нет требований к материалам">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="dtos:TaskMaterialRequirementDto">
+                                    <Grid Padding="5" ColumnDefinitions="2*, 2*,*" RowDefinitions="Auto, Auto" ColumnSpacing="5">
+                                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding Material.Name}" FontAttributes="Bold" />
+                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding RequirementDisplay}" />
+                                        <Label Grid.Row="1" Grid.Column="0" Text="{Binding TotalCostDisplay}" />
+                                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding AvailabilityStatus}"
+                                               TextColor="{Binding AvailabilityStatus, Converter={StaticResource AvailabilityStatusToColorConverter}}" />
+
+                                        <Button Grid.Row="0" Grid.Column="2"
+                                                Text="Удалить"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProjectTaskDetailsViewModel}}, Path=DeleteRequirementCommand}"
+                                                CommandParameter="{Binding}"
+                                                BackgroundColor="Firebrick"
+                                                HeightRequest="40"
+                                                WidthRequest="90"
+                                                Margin="5,0,0,0" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <StackLayout IsVisible="{Binding MaterialRequirements.Count, Converter={StaticResource IsGreaterThanZeroConverter}}">
+                            <BoxView HeightRequest="1" BackgroundColor="LightGray" Margin="0,10" />
+
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Общая стоимость материалов: " FontAttributes="Bold" />
+                                        <Span Text="{Binding TotalCost, StringFormat='{0:N2} BYN'}" TextColor="DarkGreen" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Бюджет проекта: " FontAttributes="Bold" />
+                                        <Span Text="{Binding ProjectBudget, StringFormat='{0:N2} BYN'}" TextColor="Blue" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Статус бюджета: " FontAttributes="Bold" />
+                                        <Span Text="{Binding IsBudgetAvailable, Converter={StaticResource BudgetStatusConverter}}"
+                                              TextColor="{Binding IsBudgetAvailable, Converter={StaticResource BoolToColorConverter}}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Label Text="{Binding StatusMessage}" Margin="0,10,0,0"
+                                   TextColor="{Binding AllMaterialsAvailable, Converter={StaticResource BoolToColorConverter}}"
+                                   HorizontalOptions="Center" />
+
+                            <Button Text="Выполнить задачу"
+                                    Command="{Binding CompleteTaskCommand}"
+                                    Margin="0,10,0,0" />
+                        </StackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

@@ -44,6 +44,16 @@ public partial class ProjectsViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task GoToCreateTask()
+    {
+        IDictionary<string, object> dict = new Dictionary<string, object>()
+        {
+            { "projectId",SelectedProject!.Id }
+        };
+        await Shell.Current.GoToAsync(nameof(CreateTaskPage), dict);
+    }
+
+    [RelayCommand]
     private async Task UpdateProject()
     {
         IDictionary<string, object> parameters = new Dictionary<string, object>()

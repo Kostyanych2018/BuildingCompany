@@ -11,4 +11,7 @@ public class ProjectTaskDto
     public int CompletionPercentage { get;  set; }
     public ObjectId ProjectId { get;  set; }
     public ObjectId? AssignedEmployeeId { get;  set; }
+    public string? RequiredPosition { get; set; }
+    public int? RequiredExperience { get; set; }
+    public int? RequiredCertificationLevel { get; set; }
 }

@@ -24,10 +24,12 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<ProjectTask>().ToCollection("tasks");
         modelBuilder.Entity<Employee>().ToCollection("employees");
         modelBuilder.Entity<Material>().ToCollection("materials");
+        modelBuilder.Entity<TaskMaterialRequirement>().ToCollection("taskMaterialRequirements");
 
         modelBuilder.Entity<Project>().HasKey(p => p.Id);
         modelBuilder.Entity<ProjectTask>().HasKey(p => p.Id);
         modelBuilder.Entity<Employee>().HasKey(p => p.Id);
         modelBuilder.Entity<Material>().HasKey(p => p.Id);
+        modelBuilder.Entity<TaskMaterialRequirement>().HasKey(p=>p.Id);
     }
 }

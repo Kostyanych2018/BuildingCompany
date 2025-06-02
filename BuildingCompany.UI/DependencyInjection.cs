@@ -22,7 +22,10 @@ public static class DependencyInjection
             .AddTransient<CreateProjectPage>()
             .AddTransient<UpdateProjectPage>()
             .AddTransient<ProjectTaskDetailsPage>()
+            .AddTransient<CreateTaskPage>()
             .AddTransient<EmployeesPage>()
+            .AddTransient<CreateEmployeePage>()
+            .AddTransient<UpdateEmployeePage>()
             .AddTransient<MaterialsPage>()
             .AddTransient<CreateMaterialPage>()
             .AddTransient<MaterialDetailsPage>();
@@ -37,11 +40,13 @@ public static class DependencyInjection
             .AddTransient<CreateProjectViewModel>()
             .AddTransient<UpdateProjectViewModel>()
             .AddTransient<ProjectTaskDetailsViewModel>()
+            .AddTransient<CreateTaskViewModel>()
             .AddTransient<EmployeesViewModel>()
+            .AddTransient<CreateEmployeeViewModel>()
+            .AddTransient<UpdateEmployeeViewModel>()
             .AddTransient<MaterialsViewModel>()
             .AddTransient<CreateMaterialViewModel>()
             .AddTransient<MaterialDetailsViewModel>();
-            
         return services;
     }
 }

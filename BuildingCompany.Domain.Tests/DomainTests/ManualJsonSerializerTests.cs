@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using BuildingCompany.Domain.Entities;
 using BuildingCompany.Serialization;
-using Xunit;
 
-namespace BuildingCompany.Domain.Tests;
+namespace BuildingCompany.Domain.Tests.DomainTests;
 
 public class ManualJsonSerializerTests
 {

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.EmployeeViewModels"
+             x:Class="BuildingCompany.UI.Pages.EmployeePages.UpdateEmployeePage"
+             Shell.NavBarIsVisible="False"
+             x:DataType="vm:UpdateEmployeeViewModel">
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout Spacing="10" Padding="10">
+                <Border Style="{StaticResource MyBorder}" Padding="10">
+                    <VerticalStackLayout Spacing="10" Padding="10">
+                        <Label Text="Редактирование сотрудника" Style="{StaticResource TitleLabel}" />
+                        <Entry Placeholder="ФИО сотрудника" Text="{Binding FullName}" />
+                        <Entry Placeholder="Должность" Text="{Binding Position}" />
+                        <Button Text="Сохранить изменения" Command="{Binding UpdateEmployeeCommand}" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage> 

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.EmployeeViewModels"
+             xmlns:converters="clr-namespace:BuildingCompany.UI.Converters"
+             x:Class="BuildingCompany.UI.Pages.EmployeePages.CreateEmployeePage"
+             Shell.NavBarIsVisible="False"
+             x:DataType="vm:CreateEmployeeViewModel">
+    
+    <ContentPage.Resources>
+        <converters:NumericValidationBehavior x:Key="NumericValidationBehavior" />
+    </ContentPage.Resources>
+    
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout Spacing="10" Padding="10">
+                <Border Style="{StaticResource MyBorder}">
+                    <VerticalStackLayout Spacing="10" Padding="10">
+                        <Label Text="Создание сотрудника" Style="{StaticResource TitleLabel}" />
+                        
+                        <Label Text="ФИО сотрудника" FontSize="16"/>
+                        <Entry Placeholder="Введите ФИО сотрудника" Text="{Binding FullName}" />
+                        
+                        <Label Text="Должность" FontSize="16"/>
+                        <Entry Placeholder="Введите должность" Text="{Binding Position}" />
+                        
+                        <Label Text="Опыт работы (лет)" FontSize="16"/>
+                        <Entry Placeholder="Введите опыт работы" Text="{Binding Experience}" Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <converters:NumericValidationBehavior />
+                            </Entry.Behaviors>
+                        </Entry>
+                        
+                        <Label Text="Уровень сертификации (1-5)" FontSize="16"/>
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Button Text="1" Command="{Binding SetCertificationLevelCommand}" CommandParameter="1"
+                                    BackgroundColor="{Binding CertificationLevel, Converter={StaticResource CertificationLevelColorConverter}, ConverterParameter=1}"
+                                    WidthRequest="50" HeightRequest="50" />
+                            <Button Text="2" Command="{Binding SetCertificationLevelCommand}" CommandParameter="2"
+                                    BackgroundColor="{Binding CertificationLevel, Converter={StaticResource CertificationLevelColorConverter}, ConverterParameter=2}"
+                                    WidthRequest="50" HeightRequest="50" />
+                            <Button Text="3" Command="{Binding SetCertificationLevelCommand}" CommandParameter="3"
+                                    BackgroundColor="{Binding CertificationLevel, Converter={StaticResource CertificationLevelColorConverter}, ConverterParameter=3}"
+                                    WidthRequest="50" HeightRequest="50" />
+                            <Button Text="4" Command="{Binding SetCertificationLevelCommand}" CommandParameter="4"
+                                    BackgroundColor="{Binding CertificationLevel, Converter={StaticResource CertificationLevelColorConverter}, ConverterParameter=4}"
+                                    WidthRequest="50" HeightRequest="50" />
+                            <Button Text="5" Command="{Binding SetCertificationLevelCommand}" CommandParameter="5"
+                                    BackgroundColor="{Binding CertificationLevel, Converter={StaticResource CertificationLevelColorConverter}, ConverterParameter=5}"
+                                    WidthRequest="50" HeightRequest="50" />
+                        </HorizontalStackLayout>
+                        
+                        <Button Text="Создать сотрудника" Command="{Binding CreateEmployeeCommand}" 
+                                BackgroundColor="#4CAF50" TextColor="White" Margin="0,20,0,0" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage> 
