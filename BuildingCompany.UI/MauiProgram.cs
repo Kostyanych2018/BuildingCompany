@@ -2,6 +2,7 @@
 using BuildingCompany.Application;
 using BuildingCompany.Infrastructure;
 using BuildingCompany.Infrastructure.Data;
+using BuildingCompany.UI.Services;
 using CommunityToolkit.Maui;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,9 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("Free-Regular-400.otf","FreeRegular");
+                fonts.AddFont("Free-Solid-900.otf","FreeSolid");
+                fonts.AddFont("Brands-Regular-400.otf","BrandsRegular");
             });
         var assemnbly = Assembly.GetExecutingAssembly();
         using var stream = assemnbly.GetManifestResourceStream(settingsStream);
@@ -40,7 +44,8 @@ public static class MauiProgram
             .AddApplication()
             .AddInfrastructure(options)
             .RegisterPages()
-            .RegisterViewModels();
+            .RegisterViewModels()
+            .AddSingleton<ImageService>();
         // DbInitializer.Initialize(builder.Services.BuildServiceProvider()).Wait();
 #if DEBUG
         builder.Logging.AddDebug();

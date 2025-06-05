@@ -7,23 +7,41 @@
     xmlns:local="clr-namespace:BuildingCompany.UI"
     xmlns:pages="clr-namespace:BuildingCompany.UI.Pages"
     xmlns:employeePages="clr-namespace:BuildingCompany.UI.Pages.EmployeePages"
-    xmlns:projectPages="using:BuildingCompany.UI.Pages.ProjectPages"
+    xmlns:projectPages="clr-namespace:BuildingCompany.UI.Pages.ProjectPages"
     xmlns:materialPages="clr-namespace:BuildingCompany.UI.Pages.MaterialPages"
     Shell.FlyoutBehavior="Flyout"
     FlyoutBackgroundColor="LightYellow">
 
+    <FlyoutItem Title="Главная">
+        <FlyoutItem.Icon>
+            <FontImageSource Glyph="&#xf015;" FontFamily="FreeSolid" Color="Green"/>
+        </FlyoutItem.Icon>
+        <ShellContent
+            ContentTemplate="{DataTemplate pages:HomePage}"
+            Route="HomePage" />
+    </FlyoutItem>
 
     <FlyoutItem Title="Проекты">
+        <FlyoutItem.Icon>
+            <FontImageSource Glyph="&#xf0ae;" FontFamily="FreeSolid" Color="Green"/>
+        </FlyoutItem.Icon>
         <ShellContent
             ContentTemplate="{DataTemplate projectPages:ProjectsPage}"
             Route="ProjectsPage" />
     </FlyoutItem>
+    
     <FlyoutItem Title="Сотрудники">
+        <FlyoutItem.Icon>
+            <FontImageSource Glyph="&#xf2bb;" FontFamily="FreeSolid" Color="Green"/>
+        </FlyoutItem.Icon>
         <ShellContent
             ContentTemplate="{DataTemplate employeePages:EmployeesPage}"
             Route="EmployeesPage" />
     </FlyoutItem>
     <FlyoutItem Title="Материалы">
+        <FlyoutItem.Icon>
+            <FontImageSource Glyph="&#xf1b8;" FontFamily="FreeSolid" Color="Green"/>
+        </FlyoutItem.Icon>
         <ShellContent
             ContentTemplate="{DataTemplate materialPages:MaterialsPage}"
             Route="MaterialsPage" />

@@ -4,25 +4,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.EmployeeViewModels"
              xmlns:oxy="clr-namespace:OxyPlot.Maui.Skia;assembly=OxyPlot.Maui.Skia"
+             xmlns:converters="clr-namespace:BuildingCompany.UI.Converters"
              xmlns:dto="clr-namespace:BuildingCompany.Application.DTOs;assembly=BuildingCompany.Application"
              x:Class="BuildingCompany.UI.Pages.EmployeePages.EmployeesPage"
              x:DataType="vm:EmployeesViewModel">
-    
+    <ContentPage.Resources>
+        <converters:ImageSourceConverter x:Key="ImageSourceConverter" />
+    </ContentPage.Resources>
     <ContentPage.MenuBarItems>
         <MenuBarItem Text="Создать">
-            <MenuFlyoutItem Text="Сотрудника" Command="{Binding GoToCreateEmployeeCommand}" />
+            <MenuFlyoutItem
+                Text="Сотрудника" Command="{Binding GoToCreateEmployeeCommand}" />
         </MenuBarItem>
         <MenuBarItem Text="Удалить">
-            <MenuFlyoutItem Text="Сотрудника" Command="{Binding DeleteEmployeeCommand}"
-                            IsEnabled="{Binding SelectedEmployee,Converter={StaticResource IsNotNullConverter}}" />
+            <MenuFlyoutItem
+                Text="Сотрудника" Command="{Binding DeleteEmployeeCommand}"
+                IsEnabled="{Binding SelectedEmployee,Converter={StaticResource IsNotNullConverter}}" />
         </MenuBarItem>
         <MenuBarItem Text="Редактировать">
             <MenuFlyoutItem Text="Сотрудника"
                             Command="{Binding UpdateEmployeeCommand}"
-                            IsEnabled="{Binding SelectedEmployee,Converter={StaticResource IsNotNullConverter}}"/>
+                            IsEnabled="{Binding SelectedEmployee,Converter={StaticResource IsNotNullConverter}}" />
         </MenuBarItem>
     </ContentPage.MenuBarItems>
-    
+
     <ContentPage.Content>
         <ScrollView TranslationY="-20">
             <VerticalStackLayout Spacing="10" Padding="10">
@@ -30,35 +35,69 @@
 
                 <oxy:PlotView Model="{Binding StatusPlot}"
                               HeightRequest="200" />
-                
+
                 <Label Text="{Binding Message}"
                        IsVisible="{Binding Message, Converter={StaticResource StringNotNullOrEmptyConverter}}"
                        HorizontalOptions="Center"
                        TextColor="Gray"
                        Margin="0,10,0,0" />
-                
+
                 <CollectionView ItemsSource="{Binding Employees}"
-                               SelectedItem="{Binding SelectedEmployee}"
-                               SelectionMode="Single"
-                               EmptyView="Нет доступных сотрудников">
+                                SelectedItem="{Binding SelectedEmployee}"
+                                SelectionMode="Single"
+                                EmptyView="Нет доступных сотрудников">
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"></LinearItemsLayout>
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="dto:EmployeeDto">
-                            <Border Margin="5" Style="{StaticResource MyBorder}">
-                                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
-                                    <Label Grid.Row="0" Grid.Column="0" 
-                                           Text="{Binding FullName}" 
-                                           FontAttributes="Bold"
-                                           FontSize="16" />
-                                    <Label Grid.Row="1" Grid.Column="0" 
-                                           Text="{Binding Position}" 
-                                           FontSize="14" />
-                                    <Label Grid.Row="0" Grid.Column="1" 
-                                           Text="{Binding Status}" 
-                                           TextColor="{Binding Status, Converter={StaticResource EmployeeStatusToColorConverter}}"
-                                           FontSize="14" />
+                            <Border Margin="5" Style="{StaticResource MyBorder}" Padding="10">
+                                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+                                    <Frame Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"
+                                           CornerRadius="50" IsClippedToBounds="True"
+                                           Padding="0" Margin="0,0,15,0"
+                                           WidthRequest="100" HeightRequest="100"
+                                           BorderColor="LightGray">
+                                        <Image Source="{Binding ImagePath, Converter={StaticResource ImageSourceConverter}}"
+                                               Aspect="AspectFill" />
+                                    </Frame>
+
+                                    <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding FullName}"
+                                               FontAttributes="Bold"
+                                               FontSize="18" />
+                                        <Label Text="{Binding Position}"
+                                               FontSize="16"
+                                               TextColor="#555555" />
+                                    </VerticalStackLayout>
+
+                                    <Frame Grid.Row="0" Grid.Column="2"
+                                           BackgroundColor="{Binding Status, Converter={StaticResource EmployeeStatusToColorConverter}}"
+                                           CornerRadius="12" Padding="8,4"
+                                           HasShadow="False" VerticalOptions="Start">
+                                        <Label Text="{Binding Status}"
+                                               TextColor="White"
+                                               FontSize="12"
+                                               FontAttributes="Bold" />
+                                    </Frame>
+
+                                    <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                          ColumnDefinitions="Auto,*,Auto,*" RowDefinitions="Auto"
+                                          Margin="0,12,0,0">
+                                        <Label Grid.Column="0" Text="Опыт:"
+                                               FontAttributes="Bold"
+                                               FontSize="14" Margin="0,0,5,0" />
+                                        <Label Grid.Column="1" Text="{Binding Experience, StringFormat='{0} года/лет'}"
+                                               FontSize="14" Margin="0,0,15,0" />
+
+                                        <Label Grid.Column="2" Text="Сертификация:"
+                                               FontAttributes="Bold"
+                                               FontSize="14" Margin="0,0,5,0" />
+                                        <Label Grid.Column="3" Text="{Binding CertificationLevel, StringFormat='Уровень {0}'}"
+                                               FontSize="14" />
+                                    </Grid>
+
+
                                 </Grid>
                             </Border>
                         </DataTemplate>

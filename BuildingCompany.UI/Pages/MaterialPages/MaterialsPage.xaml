@@ -4,11 +4,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.MaterialsViewModels"
              xmlns:dto="clr-namespace:BuildingCompany.Application.DTOs;assembly=BuildingCompany.Application"
+             xmlns:converters="clr-namespace:BuildingCompany.UI.Converters"
+             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="BuildingCompany.UI.Pages.MaterialPages.MaterialsPage"
              x:DataType="vm:MaterialsViewModel">
+    <ContentPage.Resources>
+        <converters:ImageSourceConverter x:Key="ImageSourceConverter" />
+        <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+    </ContentPage.Resources>
     <ContentPage.MenuBarItems>
         <MenuBarItem Text="Создать">
-            <MenuFlyoutItem Text="Материал" Command="{Binding GoToCreateMaterialCommand}" />
+            <MenuFlyoutItem
+                Text="Материал" Command="{Binding CreateMaterialCommand}" />
         </MenuBarItem>
     </ContentPage.MenuBarItems>
     <ContentPage.Content>
@@ -16,6 +23,16 @@
             <VerticalStackLayout Spacing="10" Padding="10">
                 <Label Text="Материалы" Style="{StaticResource TitleLabel}" />
                 <BoxView HeightRequest="2" Color="Black" />
+                
+                <Border Style="{StaticResource MyBorder}" Margin="0,0,0,10">
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Топ 5 самых дорогих материалов" Style="{StaticResource SubTitleLabel}" />
+                        <microcharts:ChartView Chart="{Binding TopMaterialsChart}" 
+                                               HeightRequest="250" 
+                                               HorizontalOptions="Fill" />
+                    </VerticalStackLayout>
+                </Border>
+                
                 <CollectionView ItemsSource="{Binding Materials}"
                                 EmptyView="Материалов пока нет">
                     <CollectionView.ItemsLayout>
@@ -24,15 +41,52 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="dto:MaterialDto">
                             <Border Style="{StaticResource MyBorder}">
-                                <VerticalStackLayout>
-                                    <Label Text="{Binding Name}" />
-                                    <VerticalStackLayout.GestureRecognizers>
+                                <Grid ColumnDefinitions="Auto,Auto,*" RowDefinitions="Auto, Auto, Auto" Padding="10">
+                                    <Grid IsVisible="{Binding HasSecondaryImage, Converter={StaticResource InvertedBoolConverter}}"
+                                          Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2">
+                                        <Image Source="{Binding ImagePath, Converter={StaticResource ImageSourceConverter}}"
+                                               HeightRequest="100" WidthRequest="100"
+                                               Margin="0,0,10,0" />
+                                    </Grid>
+
+                                    <Grid IsVisible="{Binding HasSecondaryImage}"
+                                          Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Image Grid.Column="0"
+                                               Source="{Binding ImagePath, Converter={StaticResource ImageSourceConverter}}"
+                                               HeightRequest="100" WidthRequest="100"
+                                               Margin="0,0,0,0" />
+
+                                        <Image Grid.Column="1"
+                                               Source="{Binding SecondaryImagePath, Converter={StaticResource ImageSourceConverter}}"
+                                               HeightRequest="100" WidthRequest="100"
+                                               Margin="0,0,10,0" />
+                                    </Grid>
+
+                                    <Label Grid.Row="0" Grid.Column="2"
+                                           Text="{Binding Name}"
+                                           FontAttributes="Bold"
+                                           FontSize="16" />
+
+                                    <Label Grid.Row="1" Grid.Column="2"
+                                           Text="{Binding CategoryDisplay}"
+                                           FontSize="14" />
+
+                                    <Label Grid.Row="2" Grid.Column="2"
+                                           Text="{Binding PriceDisplay}"
+                                           FontSize="14" />
+
+                                    <Grid.GestureRecognizers>
                                         <TapGestureRecognizer
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MaterialsViewModel}},
-                                            Path=GoToMaterialsDetailsCommand}"
+                                            Path=MaterialsDetailsCommand}"
                                             CommandParameter="{Binding .}" />
-                                    </VerticalStackLayout.GestureRecognizers>
-                                </VerticalStackLayout>
+                                    </Grid.GestureRecognizers>
+                                </Grid>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

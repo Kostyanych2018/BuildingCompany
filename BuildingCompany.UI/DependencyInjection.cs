@@ -1,3 +1,4 @@
+using BuildingCompany.UI.Pages;
 using BuildingCompany.UI.Pages.EmployeePages;
 using BuildingCompany.UI.Pages.MaterialPages;
 using BuildingCompany.UI.Pages.ProjectPages;
@@ -28,7 +29,9 @@ public static class DependencyInjection
             .AddTransient<UpdateEmployeePage>()
             .AddTransient<MaterialsPage>()
             .AddTransient<CreateMaterialPage>()
-            .AddTransient<MaterialDetailsPage>();
+            .AddTransient<MaterialDetailsPage>()
+            .AddTransient<UpdateMaterialPage>()
+            .AddTransient<HomePage>();
             
         return services;
     }
@@ -46,7 +49,8 @@ public static class DependencyInjection
             .AddTransient<UpdateEmployeeViewModel>()
             .AddTransient<MaterialsViewModel>()
             .AddTransient<CreateMaterialViewModel>()
-            .AddTransient<MaterialDetailsViewModel>();
+            .AddTransient<MaterialDetailsViewModel>()
+            .AddTransient<UpdateMaterialViewModel>();
         return services;
     }
 }

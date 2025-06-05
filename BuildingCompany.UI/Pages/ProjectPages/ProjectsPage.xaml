@@ -2,31 +2,50 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:projectViewModels="using:BuildingCompany.UI.ViewModels.ProjectViewModels"
+             xmlns:projectViewModels="clr-namespace:BuildingCompany.UI.ViewModels.ProjectViewModels"
              xmlns:dto="clr-namespace:BuildingCompany.Application.DTOs;assembly=BuildingCompany.Application"
+             xmlns:oxy="clr-namespace:OxyPlot.Maui.Skia;assembly=OxyPlot.Maui.Skia"
              x:Class="BuildingCompany.UI.Pages.ProjectPages.ProjectsPage"
-             x:DataType="projectViewModels:ProjectsViewModel" >
+             x:DataType="projectViewModels:ProjectsViewModel">
     <ContentPage.MenuBarItems>
         <MenuBarItem Text="Создать">
             <MenuFlyoutItem Text="Проект" Command="{Binding GoToCreateProjectCommand}" />
-            <MenuFlyoutItem Text="Задачу" Command="{Binding GoToCreateTaskCommand}" 
-IsEnabled="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}" />
+            <MenuFlyoutItem Text="Задачу" Command="{Binding GoToCreateTaskCommand}"
+                            IsEnabled="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}" />
         </MenuBarItem>
         <MenuBarItem Text="Удалить">
             <MenuFlyoutItem Text="Проект" Command="{Binding DeleteProjectCommand}"
-                            IsEnabled="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}" />
+                           IsEnabled="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}">
+            </MenuFlyoutItem>
         </MenuBarItem>
         <MenuBarItem Text="Редактировать">
-            <MenuFlyoutItem Text="Проект"
-                            Command="{Binding UpdateProjectCommand}"
-                            IsEnabled="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}"/>
+            <MenuFlyoutItem
+                Text="Проект"
+                Command="{Binding UpdateProjectCommand}"
+                IsEnabled="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}">
+            </MenuFlyoutItem>
+        </MenuBarItem>
+        <MenuBarItem Text="Действия">
+            <MenuFlyoutItem Text="Завершить проект"
+                            Command="{Binding CompleteProjectCommand}"
+                            IsEnabled="{Binding CanCompleteSelectedProject}" />
         </MenuBarItem>
     </ContentPage.MenuBarItems>
     <ContentPage.Content>
         <ScrollView TranslationY="-20">
             <VerticalStackLayout Spacing="10" Padding="10">
-                <Label Text="Проекты" Style="{StaticResource TitleLabel}"/>
+                <Label Text="Проекты" Style="{StaticResource TitleLabel}" />
                 <BoxView HeightRequest="2" Color="Black" />
+
+                <Border Style="{StaticResource MyBorder}" Margin="0,0,0,10">
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Статистика проектов" Style="{StaticResource SubTitleLabel}" />
+                        <oxy:PlotView Model="{Binding ProjectStatusChart}"
+                                      HeightRequest="300"
+                                      HorizontalOptions="Fill" />
+                    </VerticalStackLayout>
+                </Border>
+
                 <Picker Title="Выберите проект:"
                         ItemsSource="{Binding Projects}"
                         SelectedItem="{Binding SelectedProject}"
@@ -46,11 +65,16 @@ IsEnabled="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter
                         <Label Text="{Binding SelectedProject.Description,StringFormat='Описание: {0}'}" />
                         <Label Text="{Binding SelectedProject.Budget,StringFormat='Бюджет: {0} BYN'}" />
                         <Label Text="{Binding SelectedProject.Status,StringFormat='Статус: {0}'}"
-                               TextColor="{Binding SelectedProject.Status,Converter={StaticResource ProjectStatusToColorConverter}}"
-                               HorizontalTextAlignment="End" />
+                               TextColor="{Binding SelectedProject.Status,Converter={StaticResource ProjectStatusToColorConverter}}" />
                     </VerticalStackLayout>
                 </Border>
-                <Label Text="Задачи проекта" Style="{StaticResource SubTitleLabel}" IsVisible="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}"/>
+
+
+                <Grid IsVisible="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Задачи проекта" Style="{StaticResource SubTitleLabel}" />
+                </Grid>
+
                 <CollectionView ItemsSource="{Binding Tasks}"
                                 EmptyView="Нет задач для данного проекта"
                                 IsVisible="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter}}">
@@ -65,19 +89,17 @@ IsEnabled="{Binding SelectedProject,Converter={StaticResource IsNotNullConverter
                                         Command="{Binding 
                                         Source={RelativeSource 
                                         AncestorType={x:Type projectViewModels:ProjectsViewModel}}, Path=GoToTaskDetailsCommand}"
-                                        CommandParameter="{Binding}"/>
+                                        CommandParameter="{Binding}" />
                                 </Border.GestureRecognizers>
-                                    <Label FontSize="15" HorizontalTextAlignment="Center">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{Binding Name}" />
-                                                <Span Text="&#160;&#160;&#160;&#160;&#160;&#160;" />
-                                                <Span Text="{Binding Status}"
-                                                      TextColor="{Binding Status,
-                                          Converter={StaticResource TaskStatusToColorConverter}}"/>
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
+                                <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto,Auto">
+                                    <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name}"
+                                           FontSize="15" FontAttributes="Bold" />
+
+                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding Status}"
+                                           TextColor="{Binding Status, Converter={StaticResource TaskStatusToColorConverter}}"
+                                           FontSize="14" />
+
+                                </Grid>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

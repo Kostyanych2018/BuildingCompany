@@ -15,8 +15,8 @@ public class TaskStatusToColorConverter : IValueConverter
                 {
                     ProjectTaskStatus.Created => Colors.Gray,
                     ProjectTaskStatus.InProgress => Colors.Orange,
+                    ProjectTaskStatus.Paused => Colors.DarkOrange,
                     ProjectTaskStatus.Completed => Colors.Green,
-                    ProjectTaskStatus.Cancelled => Colors.Red,
                     _ => Colors.Black
                 };
             }

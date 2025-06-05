@@ -6,6 +6,7 @@ using BuildingCompany.Application.DTOs;
 using BuildingCompany.Application.Interfaces;
 using BuildingCompany.Domain.Abstractions;
 using BuildingCompany.UI.Pages.EmployeePages;
+using BuildingCompany.UI.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MongoDB.Bson;
@@ -26,6 +27,7 @@ public class EmployeeStatusCount
 public partial class EmployeesViewModel : ObservableObject
 {
     private readonly IEmployeeService _employeeService;
+    private readonly ImageService _imageService;
 
     public ObservableCollection<EmployeeDto> Employees { get; } = [];
 
@@ -36,9 +38,10 @@ public partial class EmployeesViewModel : ObservableObject
     [ObservableProperty] private EmployeeDto? _selectedEmployee;
     [ObservableProperty] private string _message = string.Empty;
 
-    public EmployeesViewModel(IEmployeeService employeeService)
+    public EmployeesViewModel(IEmployeeService employeeService,ImageService imageService)
     {
         _employeeService = employeeService;
+        _imageService = imageService;
     }
 
     [RelayCommand]
@@ -47,6 +50,7 @@ public partial class EmployeesViewModel : ObservableObject
         var employeeDtos = (await _employeeService.GetEmployees()).ToList();
         Employees.Clear();
         foreach (var dto in employeeDtos) {
+            dto.ImagePath = _imageService.GetEmployeeImage(dto.Position);
             Employees.Add(dto);
         }
         

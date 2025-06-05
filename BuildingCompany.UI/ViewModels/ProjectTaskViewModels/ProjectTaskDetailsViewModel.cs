@@ -3,6 +3,7 @@ using BuildingCompany.Application.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MongoDB.Bson;
+using System.Threading;
 
 namespace BuildingCompany.UI.ViewModels.ProjectTaskViewModels;
 
@@ -14,6 +15,8 @@ public partial class ProjectTaskDetailsViewModel(
     ITaskMaterialRequirementService taskMaterialRequirementService) : ObservableObject
 {
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AssignEmployeeCommand))]
+    [NotifyCanExecuteChangedFor(nameof(PauseTaskCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ResumeTaskCommand))]
     private ProjectTaskDto? _selectedTask;
 
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AssignEmployeeCommand))]
@@ -45,7 +48,14 @@ public partial class ProjectTaskDetailsViewModel(
     [ObservableProperty] private int _animatedProgressValue;
     [ObservableProperty] private double _animatedProgressPercent;
 
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(PauseTaskCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ResumeTaskCommand))]
+    private bool _isTaskInProgress;
+
+    private CancellationTokenSource? _progressCancellationTokenSource;
+
     public bool IsTaskNotCompleted => SelectedTask?.Status != "Completed";
+    public bool IsTaskPaused => SelectedTask?.Status == "Paused";
 
     public ObservableCollection<EmployeeDto> Employees { get; } = [];
     public ObservableCollection<MaterialDto> Materials { get; } = [];
@@ -61,7 +71,13 @@ public partial class ProjectTaskDetailsViewModel(
 
         AnimatedProgressValue = SelectedTask?.CompletionPercentage ?? 0;
         AnimatedProgressPercent = AnimatedProgressValue / 100.0;
+        IsTaskInProgress = SelectedTask?.Status == "InProgress";
+
         OnPropertyChanged(nameof(IsTaskNotCompleted));
+        OnPropertyChanged(nameof(IsTaskPaused));
+        PauseTaskCommand.NotifyCanExecuteChanged();
+        ResumeTaskCommand.NotifyCanExecuteChanged();
+        CompleteTaskCommand.NotifyCanExecuteChanged();
 
         await LoadMaterialRequirements();
     }
@@ -199,7 +215,10 @@ public partial class ProjectTaskDetailsViewModel(
 
     private void UpdateStatusMessage()
     {
-        if (MaterialRequirements.Count == 0) {
+        if (SelectedTask?.Status == "Paused") {
+            StatusMessage = "Задача приостановлена";
+        }
+        else if (MaterialRequirements.Count == 0) {
             StatusMessage = "Нет требований к материалам";
         }
         else if (!AllMaterialsAvailable) {
@@ -219,6 +238,62 @@ public partial class ProjectTaskDetailsViewModel(
         }
     }
 
+    [RelayCommand(CanExecute = nameof(CanPauseTask))]
+    private async Task PauseTask()
+    {
+        _progressCancellationTokenSource?.Cancel();
+        
+        SelectedTask!.Status = "Paused";
+        OnPropertyChanged(nameof(SelectedTask));
+        
+        await projectTaskService.UpdateTask(SelectedTask);
+        
+        IsTaskInProgress = false;
+        OnPropertyChanged(nameof(IsTaskPaused));
+        
+        PauseTaskCommand.NotifyCanExecuteChanged();
+        ResumeTaskCommand.NotifyCanExecuteChanged();
+        CompleteTaskCommand.NotifyCanExecuteChanged();
+        
+        UpdateStatusMessage();
+        
+        await Shell.Current.DisplayAlert("Информация", 
+            $"Задача приостановлена. Текущий прогресс: {SelectedTask.CompletionPercentage}%", "OK");
+    }
+    
+    private bool CanPauseTask()
+    {
+        return SelectedTask != null &&
+               SelectedTask.Status == "InProgress";
+    }
+    
+    [RelayCommand(CanExecute = nameof(CanResumeTask))]
+    private async Task ResumeTask()
+    {
+        if (SelectedTask == null) return;
+        
+        SelectedTask.Status = "InProgress";
+        OnPropertyChanged(nameof(SelectedTask));
+        
+        await projectTaskService.UpdateTask(SelectedTask);
+        
+        IsTaskInProgress = true;
+        OnPropertyChanged(nameof(IsTaskPaused));
+        
+        PauseTaskCommand.NotifyCanExecuteChanged();
+        ResumeTaskCommand.NotifyCanExecuteChanged();
+        UpdateStatusMessage();
+        await Shell.Current.DisplayAlert("Информация", 
+            $"Задача возобновлена с прогресса: {SelectedTask.CompletionPercentage}%", "OK");
+        await CompleteTaskCommand.ExecuteAsync(null);
+    }
+    
+    private bool CanResumeTask()
+    {
+        return SelectedTask != null && 
+               SelectedTask.Status == "Paused";
+    }
+
     [RelayCommand(CanExecute = nameof(CanCompleteTask))]
     private async Task CompleteTask()
     {
@@ -226,21 +301,60 @@ public partial class ProjectTaskDetailsViewModel(
         int endValue = 100;
         int step = 5;
 
-        for (int i = startValue; i <= endValue; i += step) {
-            AnimatedProgressValue = i;
-            AnimatedProgressPercent = i / 100.0;
-            await Task.Delay(100);
+        if (SelectedTask.Status != "InProgress") {
+            SelectedTask.Status = "InProgress";
+            OnPropertyChanged(nameof(SelectedTask));
+            await projectTaskService.UpdateTask(SelectedTask);
+            IsTaskInProgress = true;
         }
 
-        bool success = await taskMaterialRequirementService.CompleteTask(SelectedTask.Id);
-        if (success) {
-            await LoadTask();
-            await Shell.Current.DisplayAlert("Успех", "Задача выполнена! Материалы использованы, сотрудник освобожден.", "OK");
+        _progressCancellationTokenSource = new CancellationTokenSource();
+        var token = _progressCancellationTokenSource.Token;
+
+        try {
+            for (int i = startValue; i <= endValue && !token.IsCancellationRequested; i += step) {
+                SelectedTask.CompletionPercentage = i;
+
+                AnimatedProgressValue = i;
+                AnimatedProgressPercent = i / 100.0;
+
+                await Task.Delay(600, token);
+                
+                if (token.IsCancellationRequested) {
+                    return;
+                }
+            }
+
+            if (!token.IsCancellationRequested) {
+                SelectedTask.CompletionPercentage = 100;
+                SelectedTask.Status = "Completed";
+                OnPropertyChanged(nameof(SelectedTask));
+                await projectTaskService.UpdateTask(SelectedTask);
+
+                bool success = await taskMaterialRequirementService.CompleteTask(SelectedTask.Id);
+                if (success) {
+                    IsTaskInProgress = false;
+                    await LoadTask();
+                    await Shell.Current.DisplayAlert("Успех", "Задача выполнена! Материалы использованы, сотрудник освобожден.", "OK");
+                }
+                else {
+                    SelectedTask.CompletionPercentage = startValue;
+                    SelectedTask.Status = "InProgress";
+                    OnPropertyChanged(nameof(SelectedTask));
+                    await projectTaskService.UpdateTask(SelectedTask);
+
+                    AnimatedProgressValue = startValue;
+                    AnimatedProgressPercent = startValue / 100.0;
+                    await Shell.Current.DisplayAlert("Ошибка", "Не удалось выполнить задачу. Проверьте наличие материалов.", "OK");
+                }
+            }
         }
-        else {
-            AnimatedProgressValue = startValue;
-            AnimatedProgressPercent = startValue / 100.0;
-            await Shell.Current.DisplayAlert("Ошибка", "Не удалось выполнить задачу. Проверьте наличие материалов.", "OK");
+        catch (TaskCanceledException) {
+            // Task was canceled, handled by PauseTask
+        }
+        finally {
+            _progressCancellationTokenSource?.Dispose();
+            _progressCancellationTokenSource = null;
         }
     }
 

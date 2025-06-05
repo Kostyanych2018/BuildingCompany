@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BuildingCompany.UI.Pages.HomePage"
+             Shell.NavBarIsVisible="False">
+    
+    <ScrollView>
+        <Grid RowDefinitions="Auto,Auto,*" Padding="20">
+            <VerticalStackLayout Grid.Row="0" Spacing="10" Margin="0,20,0,30">
+                <Image Source="building_company.png" 
+                       HeightRequest="120" 
+                       HorizontalOptions="Center" />
+                
+                <Label Text="BuildingCompany" 
+                       FontSize="28" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Center"
+                       TextColor="#3F51B5" />
+                
+                <Label Text="Современные решения для строительного бизнеса" 
+                       FontSize="16" 
+                       HorizontalOptions="Center"
+                       TextColor="#757575" />
+            </VerticalStackLayout>
+            
+            <Border Grid.Row="1" 
+                   Style="{StaticResource ServiceCardBorder}" 
+                   BackgroundColor="#EBF5FB"
+                   Margin="0,0,0,20">
+                <VerticalStackLayout Padding="15" Spacing="10">
+                    <Label Text="Добро пожаловать!" 
+                           FontSize="22" 
+                           FontAttributes="Bold"
+                           TextColor="#2E86C1" />
+                    
+                    <Label Text="Наша система управления строительными проектами поможет вам эффективно организовать работу и контролировать ресурсы." 
+                           FontSize="16"
+                           TextColor="#34495E" />
+                </VerticalStackLayout>
+            </Border>
+            
+            <VerticalStackLayout Grid.Row="2" Spacing="20">
+                <Label Text="Наши услуги" 
+                       FontSize="24" 
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,10"
+                       TextColor="#3F51B5" />
+                
+                <Border Style="{StaticResource ServiceCardBorder}" 
+                       BackgroundColor="#E8F5E9">
+                    <Grid ColumnDefinitions="Auto,*" Padding="15" ColumnSpacing="15">
+                        <Image Grid.Column="0" 
+                               Source="architect1.png" 
+                               WidthRequest="80" 
+                               HeightRequest="80" />
+                        
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="Управление проектами" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2E7D32" />
+                            
+                            <Label Text="Создавайте и отслеживайте проекты, устанавливайте бюджеты, контролируйте статусы проектов и задач. Наглядная статистика поможет вам всегда быть в курсе прогресса." 
+                                   FontSize="14"
+                                   TextColor="#33691E" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+                
+                <Border Style="{StaticResource ServiceCardBorder}" 
+                       BackgroundColor="#E3F2FD">
+                    <Grid ColumnDefinitions="Auto,*" Padding="15" ColumnSpacing="15">
+                        <Image Grid.Column="0" 
+                               Source="manager1.png" 
+                               WidthRequest="80" 
+                               HeightRequest="80" />
+                        
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="Управление персоналом" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="#1565C0" />
+                            
+                            <Label Text="Автоматизированное назначение сотрудников на задачи с учетом их квалификации, опыта и должности. Отслеживание занятости персонала." 
+                                   FontSize="14"
+                                   TextColor="#0D47A1" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+                
+                <Border Style="{StaticResource ServiceCardBorder}" 
+                       BackgroundColor="#FFF3E0">
+                    <Grid ColumnDefinitions="Auto,*" Padding="15" ColumnSpacing="15">
+                        <Image Grid.Column="0" 
+                               Source="material_premium.png" 
+                               WidthRequest="80" 
+                               HeightRequest="80" />
+                        
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="Управление материалами" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="#E65100" />
+                            
+                            <Label Text="Учет строительных материалов и разделение на категории." 
+                                   FontSize="14"
+                                   TextColor="#BF360C" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+                
+                
+                <VerticalStackLayout Spacing="5" Margin="0,20,0,10">
+                    <Label Text="BuildingCompany © 2025" 
+                           FontSize="12" 
+                           TextColor="#757575"
+                           HorizontalOptions="Center" />
+                    
+                    <Label Text="Все права защищены" 
+                           FontSize="12" 
+                           TextColor="#757575"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
+</ContentPage> 

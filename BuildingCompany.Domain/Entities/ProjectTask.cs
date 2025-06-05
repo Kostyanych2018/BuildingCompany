@@ -12,7 +12,6 @@ public class ProjectTask : Entity, IEquatable<ProjectTask>
     public ObjectId ProjectId { get; set; }
     public ObjectId? AssignedEmployeeId { get; set; }
     
-    // Требования к сотруднику
     public string? RequiredPosition { get; set; }
     public int? RequiredExperience { get; set; }
     public int? RequiredCertificationLevel { get; set; }
@@ -122,6 +121,6 @@ public enum ProjectTaskStatus
 {
     Created,
     InProgress,
+    Paused,
     Completed,
-    Cancelled
 }

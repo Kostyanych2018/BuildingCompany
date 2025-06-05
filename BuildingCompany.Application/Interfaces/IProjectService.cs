@@ -10,4 +10,6 @@ public interface IProjectService
     Task<ProjectDto?> GetProject(ObjectId id);
     Task<bool> UpdateProject(ProjectDto projectDto);
     Task<bool> DeleteProject(ObjectId id);
+    Task<bool> CompleteProject(ObjectId projectId);
+    Task<bool> UpdateProjectStatus(ObjectId projectId);
 }

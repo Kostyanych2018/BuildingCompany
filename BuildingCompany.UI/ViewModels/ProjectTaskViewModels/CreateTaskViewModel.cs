@@ -43,7 +43,6 @@ public partial class CreateTaskViewModel : ObservableObject
             return;
         }
 
-        // Преобразуем строковые значения в числовые для требований
         int? requiredExperienceValue = null;
         if (IsRequiredExperienceEnabled && !string.IsNullOrWhiteSpace(RequiredExperience) && 
             int.TryParse(RequiredExperience, out int expValue))

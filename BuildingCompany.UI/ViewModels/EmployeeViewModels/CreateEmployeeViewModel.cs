@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using BuildingCompany.Application.DTOs;
 using BuildingCompany.Application.Interfaces;
+using BuildingCompany.UI.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -10,15 +11,16 @@ namespace BuildingCompany.UI.ViewModels.EmployeeViewModels;
 public partial class CreateEmployeeViewModel : ObservableObject
 {
     private readonly IEmployeeService _employeeService;
-
+    private readonly ImageService _imageService;
     [ObservableProperty] private string _fullName = string.Empty;
     [ObservableProperty] private string _position = string.Empty;
     [ObservableProperty] private int _experience = 0;
     [ObservableProperty] private int _certificationLevel = 1;
 
-    public CreateEmployeeViewModel(IEmployeeService employeeService)
+    public CreateEmployeeViewModel(IEmployeeService employeeService,ImageService imageService)
     {
         _employeeService = employeeService;
+        _imageService = imageService;
     }
 
     [RelayCommand]
@@ -63,7 +65,8 @@ public partial class CreateEmployeeViewModel : ObservableObject
             Position = Position,
             Experience = Experience,
             CertificationLevel = CertificationLevel,
-            Status = "Available"
+            Status = "Available",
+            ImagePath = _imageService.GetEmployeeImage(Position)
         };
 
         try

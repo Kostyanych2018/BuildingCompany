@@ -18,7 +18,14 @@ public partial class MaterialsPage : ContentPage
 
     protected override async void OnAppearing()
     {
-        base.OnAppearing();
-        await _viewModel.LoadMaterialsCommand.ExecuteAsync(null);
+        try
+        {
+            base.OnAppearing();
+            await _viewModel.LoadMaterialsCommand.ExecuteAsync(null);
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Ошибка", $"Не удалось загрузить данные: {ex.Message}", "OK");
+        }
     }
 }

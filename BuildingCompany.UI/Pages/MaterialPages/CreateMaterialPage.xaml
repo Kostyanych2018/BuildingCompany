@@ -3,9 +3,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.MaterialsViewModels"
+             xmlns:converters="clr-namespace:BuildingCompany.UI.Converters"
              Shell.NavBarIsVisible="False"
              x:Class="BuildingCompany.UI.Pages.MaterialPages.CreateMaterialPage"
              x:DataType="vm:CreateMaterialViewModel">
+    <ContentPage.Resources>
+        <converters:ImageSourceConverter x:Key="ImageSourceConverter" />
+        <converters:StringIsNullOrEmptyConverter x:Key="StringIsNullOrEmptyConverter" />
+        <converters:StringIsNotNullOrEmptyConverter x:Key="StringIsNotNullOrEmptyConverter" />
+    </ContentPage.Resources>
     <ContentPage.Content>
         <ScrollView>
             <VerticalStackLayout Spacing="10" Padding="10">
@@ -14,8 +20,66 @@
                         <Label Text="Создание материала" Style="{StaticResource TitleLabel}" />
                         <Entry Placeholder="Название материала" Text="{Binding MaterialName}" />
                         <Entry Placeholder="Единица измерения" Text="{Binding UnitOfMeasure}" />
-                        <Entry Placeholder="Цена/ед." Text="{Binding UnitPrice}" />
+                        <Entry Placeholder="Цена/ед." Text="{Binding UnitPrice}" TextChanged="Entry_TextChanged" />
                         <Entry Placeholder="Количество" Text="{Binding Quantity}" />
+
+                        <Label Text="Категории материала:" FontAttributes="Bold" Margin="0,10,0,0" />
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto">
+                            <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding IsPremium}" CheckedChanged="Category_CheckedChanged" />
+                            <Label Grid.Row="0" Grid.Column="1" Text="Премиум материал (+20%)" VerticalOptions="Center" />
+
+                            <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding IsEcoFriendly}" CheckedChanged="Category_CheckedChanged" />
+                            <Label Grid.Row="1" Grid.Column="1" Text="Экологичный материал (+15%)" VerticalOptions="Center" />
+
+                            <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding HasBulkDiscount}" CheckedChanged="Category_CheckedChanged" />
+                            <Label Grid.Row="2" Grid.Column="1" Text="Оптовая скидка (-10%)" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Label Text="Превью изображения:" FontAttributes="Bold" Margin="0,10,0,0" />
+                        <Border Style="{StaticResource MyBorder}" Padding="5">
+                            <Grid ColumnDefinitions="Auto,Auto,*" RowDefinitions="Auto" HeightRequest="100">
+                                <Image IsVisible="{Binding SecondaryImagePath, Converter={StaticResource StringIsNullOrEmptyConverter}}"
+                                       Grid.Column="0" Grid.ColumnSpan="2"
+                                       Source="{Binding ImagePath, Converter={StaticResource ImageSourceConverter}}"
+                                       HeightRequest="90" WidthRequest="90"
+                                       Aspect="AspectFit" />
+
+                                <Grid IsVisible="{Binding SecondaryImagePath, Converter={StaticResource StringIsNotNullOrEmptyConverter}}"
+                                      Grid.Column="0" Grid.ColumnSpan="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Grid.Column="0"
+                                           Source="{Binding ImagePath, Converter={StaticResource ImageSourceConverter}}"
+                                           HeightRequest="90" WidthRequest="55"
+                                           Aspect="AspectFit" />
+
+                                    <Image Grid.Column="1"
+                                           Source="{Binding SecondaryImagePath, Converter={StaticResource ImageSourceConverter}}"
+                                           HeightRequest="90" WidthRequest="55"
+                                           Aspect="AspectFit" />
+                                </Grid>
+
+                                <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Margin="10,0,0,0">
+                                    <Label Text="Категория требует несколько изображений" LineBreakMode="TailTruncation"
+                                           IsVisible="{Binding SecondaryImagePath, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
+                                    <Label Text="Стандартное изображение"
+                                           IsVisible="{Binding SecondaryImagePath, Converter={StaticResource StringIsNullOrEmptyConverter}}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+
+                        <Border Style="{StaticResource MyBorder}">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Итоговая стоимость:" FontAttributes="Bold" />
+                                <Label Text="{Binding PriceAdjustmentDescription}" FontSize="14" />
+                                <Label Text="{Binding FinalPrice, StringFormat='{0} BYN / ед.'}"
+                                       FontSize="16" FontAttributes="Bold" TextColor="#007F00" />
+                            </VerticalStackLayout>
+                        </Border>
+
                         <Button Text="Создать материал" Command="{Binding CreateMaterialCommand}" />
                     </VerticalStackLayout>
                 </Border>

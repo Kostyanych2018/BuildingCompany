@@ -4,10 +4,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.MaterialsViewModels"
              x:Class="BuildingCompany.UI.Pages.MaterialPages.MaterialDetailsPage"
-             Shell.NavBarIsVisible="False"
              x:DataType="vm:MaterialDetailsViewModel">
+    <ContentPage.MenuBarItems>
+        <MenuBarItem Text="Удалить">
+            <MenuFlyoutItem
+                Text="Материал" Command="{Binding DeleteMaterialCommand}"
+                CommandParameter="{Binding Material}" />
+        </MenuBarItem>
+        <MenuBarItem Text="Редактировать">
+            <MenuFlyoutItem
+                Text="Материал" Command="{Binding UpdateMaterialCommand}"
+                CommandParameter="{Binding Material}" />
+        </MenuBarItem>
+    </ContentPage.MenuBarItems>
     <ContentPage.Content>
-        <VerticalStackLayout Spacing="10" Padding="10">
+        <VerticalStackLayout Spacing="10" Padding="10" TranslationY="-20">
             <Label Text="Описание материала" Style="{StaticResource TitleLabel}" />
             <Border Style="{StaticResource MyBorder}" Padding="10">
                 <VerticalStackLayout Spacing="10">
@@ -22,6 +33,14 @@
                     <Label>
                         <Label.FormattedText>
                             <FormattedString>
+                                <Span Text="Категория: " FontAttributes="Bold" />
+                                <Span Text="{Binding Material.Category}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
                                 <Span Text="Единица измерения: " FontAttributes="Bold" />
                                 <Span Text="{Binding Material.UnitOfMeasure}" />
                             </FormattedString>
@@ -30,8 +49,24 @@
                     <Label>
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Цена за единицу: " FontAttributes="Bold" />
+                                <Span Text="Базовая цена: " FontAttributes="Bold" />
                                 <Span Text="{Binding Material.PriceDisplay}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label IsVisible="{Binding Material.FinalPrice, Converter={StaticResource NotEqualConverter}, ConverterParameter={Binding Material.UnitPrice}}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Итоговая цена: " FontAttributes="Bold" />
+                                <Span Text="{Binding Material.FinalPriceDisplay}" TextColor="#007F00" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label IsVisible="{Binding Material.PriceAdjustmentDescription, Converter={StaticResource IsStringNotNullOrEmptyConverter}}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Корректировки цены: " FontAttributes="Bold" />
+                                <Span Text="{Binding Material.PriceAdjustmentDescription}" />
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>

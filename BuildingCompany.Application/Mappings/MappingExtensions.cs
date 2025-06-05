@@ -115,6 +115,8 @@ public static class MappingExtensions
             UnitPrice = material.UnitPrice,
             UnitOfMeasure = material.UnitOfMeasure,
             Quantity = material.Quantity,
+            Category = material.Category,
+            FinalPrice = material.FinalPrice,
         };
     }
     

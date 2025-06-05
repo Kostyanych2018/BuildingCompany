@@ -79,6 +79,17 @@
 
                         <Label Text="{Binding AnimatedProgressValue,StringFormat='{0}%'}" HorizontalOptions="Center" />
 
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" IsVisible="{Binding IsTaskNotCompleted}">
+                            <Button Text="Приостановить задачу"
+                                    Command="{Binding PauseTaskCommand}"
+                                    BackgroundColor="Orange"
+                                    IsVisible="{Binding IsTaskInProgress}" />
+                            
+                            <Button Text="Возобновить задачу"
+                                    Command="{Binding ResumeTaskCommand}"
+                                    BackgroundColor="Green"
+                                    IsVisible="{Binding IsTaskPaused}" />
+                        </HorizontalStackLayout>
 
                     </VerticalStackLayout>
                 </Border>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BuildingCompany.UI.ViewModels.MaterialsViewModels"
+             Shell.NavBarIsVisible="False"
+             x:Class="BuildingCompany.UI.Pages.MaterialPages.UpdateMaterialPage"
+             x:DataType="vm:UpdateMaterialViewModel">
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout Spacing="10" Padding="10">
+                <Label Text="Редактирование материала" Style="{StaticResource TitleLabel}" />
+                <Border Style="{StaticResource MyBorder}" Padding="10">
+                    <VerticalStackLayout Spacing="10" Padding="10">
+
+                        <Label Text="{Binding Material.Name, StringFormat='Материал: {0}'}" FontSize="16" FontAttributes="Bold" />
+
+                        <Entry Placeholder="Название материала" Text="{Binding MaterialName}" />
+                        <Entry Placeholder="Единица измерения" Text="{Binding UnitOfMeasure}" />
+                        <Entry Placeholder="Количество" Text="{Binding Quantity}" />
+
+                        <Button Text="Сохранить" Command="{Binding UpdateMaterialCommand}" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

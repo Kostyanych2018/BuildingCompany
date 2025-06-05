@@ -26,6 +26,8 @@
             <custom:IsInProgressConverter x:Key="IsInProgressConverter"></custom:IsInProgressConverter>
             <custom:BudgetStatusConverter x:Key="BudgetStatusConverter"></custom:BudgetStatusConverter>
             <custom:CertificationLevelColorConverter x:Key="CertificationLevelColorConverter"></custom:CertificationLevelColorConverter>
+            <custom:NotEqualConverter x:Key="NotEqualConverter"></custom:NotEqualConverter>
+            <custom:InvertedBoolConverter x:Key="InvertedBoolConverter"></custom:InvertedBoolConverter>
             <Style x:Key="TitleLabel" TargetType="Button">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="20" />
@@ -41,6 +43,17 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 5"/>
                 <Setter Property="Stroke" Value="{SolidColorBrush Black}"/>
                 <Setter Property="Padding" Value="10"/>
+            </Style>
+            <Style x:Key="ServiceCardBorder" TargetType="Border">
+                <Setter Property="StrokeShape" Value="RoundRectangle 10"/>
+                <Setter Property="Stroke" Value="Transparent"/>
+                <Setter Property="Padding" Value="15"/>
+                <Setter Property="Shadow">
+                    <Shadow Brush="#77000000"
+                            Offset="2,2"
+                            Radius="4"
+                            Opacity="0.4" />
+                </Setter>
             </Style>
             <converters:StringNullOrEmptyConverter x:Key="StringNullOrEmptyConverter" />
             <converters:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter" />

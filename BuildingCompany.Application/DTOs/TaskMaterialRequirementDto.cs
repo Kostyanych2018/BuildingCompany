@@ -14,7 +14,7 @@ public class TaskMaterialRequirementDto
     public MaterialDto? Material { get; set; }
     
     // Computed properties
-    public decimal TotalCost => Material?.UnitPrice * RequiredQuantity ?? 0;
+    public decimal TotalCost => Material?.FinalPrice * RequiredQuantity ?? 0;
     public string? TotalCostDisplay => Material != null ? $"{TotalCost:N2} BYN" : null;
     public string? AvailabilityStatus => Material != null 
         ? (Material.Quantity >= RequiredQuantity ? "Доступно" : "Недостаточно") 

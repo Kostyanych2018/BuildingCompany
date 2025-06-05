@@ -8,8 +8,8 @@ public class Employee : Entity, IEquatable<Employee>
     public string FullName { get; set; } = null!;
     public string Position { get; set; } = null!;
     public EmployeeStatus Status { get; set; }
-    public int Experience { get; set; } // Опыт работы в годах
-    public int CertificationLevel { get; set; } // Уровень сертификации от 1 до 5
+    public int Experience { get; set; } 
+    public int CertificationLevel { get; set; } 
 
     public ObjectId? AssignedTaskId { get; set; }
 

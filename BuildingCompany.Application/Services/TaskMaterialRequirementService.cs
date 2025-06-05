@@ -81,7 +81,6 @@ public class TaskMaterialRequirementService(IUnitOfWork unitOfWork) : ITaskMater
             return false;
 
         material.Quantity -= requirement.RequiredQuantity;
-        requirement.MarkAsFulfilled();
 
         await unitOfWork.MaterialsRepository.UpdateAsync(material);
         await unitOfWork.TaskMaterialRequirementRepository.UpdateAsync(requirement);
@@ -98,7 +97,7 @@ public class TaskMaterialRequirementService(IUnitOfWork unitOfWork) : ITaskMater
         foreach (var requirement in requirements) {
             var material = await unitOfWork.MaterialsRepository.GetByIdAsync(requirement.MaterialId);
             if (material != null) {
-                totalCost += material.UnitPrice * requirement.RequiredQuantity;
+                totalCost += material.FinalPrice * requirement.RequiredQuantity;
             }
         }
 
@@ -138,12 +137,11 @@ public class TaskMaterialRequirementService(IUnitOfWork unitOfWork) : ITaskMater
             if (material == null)
                 return false;
 
-            totalCost += material.UnitPrice * requirement.RequiredQuantity;
+            totalCost += material.FinalPrice * requirement.RequiredQuantity;
 
             material.Quantity -= requirement.RequiredQuantity;
             await unitOfWork.MaterialsRepository.UpdateAsync(material);
 
-            requirement.MarkAsFulfilled();
             await unitOfWork.TaskMaterialRequirementRepository.UpdateAsync(requirement);
         }
 

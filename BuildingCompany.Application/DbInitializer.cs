@@ -42,13 +42,13 @@ public static class DbInitializer
             await unitofWork.EmployeesRepository.AddAsync(employee);
         }
 
-        var materials = new List<Material>()
-        {
-            new Material("Бетон","м3",100,50)
-        };
-        foreach (var material in materials) {
-            await unitofWork.MaterialsRepository.AddAsync(material);
-        }
+        // var materials = new List<Material>()
+        // {
+        //     new Material("Бетон","м3",100,50)
+        // };
+        // foreach (var material in materials) {
+        //     await unitofWork.MaterialsRepository.AddAsync(material);
+        // }
 
         await unitofWork.SaveAllAsync();
     }

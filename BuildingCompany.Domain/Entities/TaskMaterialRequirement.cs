@@ -19,13 +19,8 @@ public class TaskMaterialRequirement : Entity, IEquatable<TaskMaterialRequiremen
         TaskId = taskId;
         MaterialId = materialId;
         RequiredQuantity = requiredQuantity;
-        IsFulfilled = false;
     }
     
-    public void MarkAsFulfilled()
-    {
-        IsFulfilled = true;
-    }
     
     public void UpdateRequiredQuantity(int newQuantity)
     {
@@ -39,10 +34,9 @@ public class TaskMaterialRequirement : Entity, IEquatable<TaskMaterialRequiremen
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
-        return TaskId == other.TaskId && 
-               MaterialId == other.MaterialId && 
-               RequiredQuantity == other.RequiredQuantity && 
-               IsFulfilled == other.IsFulfilled;
+        return TaskId == other.TaskId &&
+               MaterialId == other.MaterialId &&
+               RequiredQuantity == other.RequiredQuantity;
     }
 
     public override bool Equals(object? obj)
@@ -55,6 +49,6 @@ public class TaskMaterialRequirement : Entity, IEquatable<TaskMaterialRequiremen
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(TaskId, MaterialId, RequiredQuantity, IsFulfilled);
+        return HashCode.Combine(TaskId, MaterialId, RequiredQuantity);
     }
 } 

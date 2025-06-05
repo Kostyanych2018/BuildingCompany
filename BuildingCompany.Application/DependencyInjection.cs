@@ -1,5 +1,6 @@
 using BuildingCompany.Application.Interfaces;
 using BuildingCompany.Application.Services;
+using BuildingCompany.Domain.MaterialPricing;
 using BuildingCompany.Domain.Strategies;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ public static class DependencyInjection
             .AddTransient<IEmployeeService, EmployeeService>()
             .AddTransient<IMaterialService, MaterialService>()
             .AddTransient<ITaskMaterialRequirementService, TaskMaterialRequirementService>();
-
+        
         services.AddSingleton<PositionQualificationStrategy>();
         services.AddSingleton<ExperienceQualificationStrategy>();
         services.AddSingleton<CertificationQualificationStrategy>();
@@ -32,6 +33,14 @@ public static class DependencyInjection
             
             return new CompositeQualificationStrategy(strategies);
         });
+        
+        services.AddTransient<BaseMaterialPricing>();
+        services.AddTransient<IMaterialPricing, BaseMaterialPricing>();
+        
+        // services.AddTransient<MaterialPricingDecorator>();
+        services.AddTransient<PremiumMaterialPricing>();
+        services.AddTransient<EcoFriendlyMaterialPricing>();
+        services.AddTransient<BulkDiscountPricing>();
         
         return services;
     }

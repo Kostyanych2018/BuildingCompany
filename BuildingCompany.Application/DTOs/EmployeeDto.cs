@@ -11,4 +11,6 @@ public class EmployeeDto
     public int Experience { get; set; }
     public int CertificationLevel { get; set; }
     public ObjectId? AssignedTaskId { get; set; }
+    
+    public string ImagePath { get; set; } = "employee_default.png";
 }

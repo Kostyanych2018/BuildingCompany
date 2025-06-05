@@ -9,12 +9,15 @@ public partial class App : Microsoft.Maui.Controls.Application
     public App()
     {
         InitializeComponent();
-    }
-            
+        
+        // Инициализируем главную страницу один раз
+        MainPage = new AppShell();
+    }    
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        var window =  new Window(new AppShell())
+        // Используем уже созданный MainPage вместо создания нового AppShell
+        var window = new Window(MainPage)
         {
             Height = 600,
             Width = 500

@@ -15,7 +15,7 @@ public class ProjectStatusToColorConverter: IValueConverter
                 "cancelled" => Colors.DarkRed,
                 "completed" => Colors.ForestGreen,
                 "planned" => Colors.Orange,
-                "inprogress" => Colors.Yellow,
+                "inprogress" => Colors.DarkOrange,
                 "created" => Colors.Gray,
                 _ => Colors.Gray
             };
